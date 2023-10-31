@@ -49,9 +49,9 @@ public class Contratante {
 		if(datos.get("REF_CORREO") != null) {
 			this.correo = datos.get("REF_CORREO").toString();
 		}
-		
-		this.password = datos.get("CVE_CONTRASENIA").toString();
-		
+		if(datos.get("CVE_CONTRASENIA")!=null) {
+			this.password = datos.get("CVE_CONTRASENIA").toString();
+		}
 		if( datos.get("CVE_MATRICULA") != null ) {
 			this.claveMatricula = datos.get("CVE_MATRICULA").toString();
 		}
@@ -61,7 +61,9 @@ public class Contratante {
 		}
 		
 		this.curp = datos.get("CVE_CURP").toString();
-		this.claveUsuario = datos.get("CVE_USUARIO").toString();
+		if(datos.get("CVE_USUARIO")!=null) {
+			this.claveUsuario = datos.get("CVE_USUARIO").toString();
+		}
 		this.activo = datos.get("IND_ACTIVO").toString();
 	}
 	

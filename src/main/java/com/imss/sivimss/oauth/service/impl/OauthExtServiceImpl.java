@@ -210,7 +210,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 				if (rs.next()) {
 					id= rs.getInt(1);
 					log.info(id.toString());
-					String credenciales = "Usuario: "+user+"<br>"+" Pass: "+contrasenia;
+					String credenciales = "<b>Usuario:</b> "+user+"<br> <b>Pass: </b>"+contrasenia;
 					 CorreoRequest correo = new CorreoRequest(contratanteR.getNombre(), credenciales, contratanteR.getCorreo(), AppConstantes.USR_CONTRASENIA);
 						//Hacemos el consumo para enviar el codigo por correo
 						Response <Object> resp = providerRestTemplate.consumirServicio(correo, urlEnvioCorreo);
