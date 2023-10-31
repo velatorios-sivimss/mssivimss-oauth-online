@@ -164,10 +164,81 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Response<Object> validarCodigo(String user, String codigo) {
+	public Response<Object> validarCodigo(String contratante, String codigo) throws IOException {
 
-		return null;
+		Login login = cuentaService.obtenerLoginPorCveContratante( contratante );
+		List<Map<String, Object>> datos;
+		List<Map<String, Object>> mapping;
+		ParametrosUtil parametrosUtil = new ParametrosUtil();
+		Response<Object> resp = null;
+		LoginUtil loginUtil = new LoginUtil();
+		
+		datos = consultaGenericaPorQuery( parametrosUtil.tiempoCodigo() );
+		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+		//tiempoCodigo = 390 *6.5 HRS DEBE DURAR 30 MINS
+		Integer tiempoCodigo = Integer.parseInt(mapping.get(0).get(BdConstantes.TIP_PARAMETRO).toString());
+		
+		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
+				this.getClass().getPackage().toString(),"","Tiempo Vida Codigo "+ tiempoCodigo);
+		
+		
+		//SI EL CODIGO TRAE DATOS PERO NO SON CORRECTO
+		if( login.getCodSeguridad()!=null && !login.getCodSeguridad().equals(codigo) ) {
+			
+			//Validamos si es un codigo anterior
+			datos = consultaGenericaPorQuery( loginUtil.conteo( login.getIdLogin(), codigo ) );
+			mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+			
+			Integer conteo = Integer.parseInt(mapping.get(0).get("conteo").toString());
+			
+			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),"","Conteo de Codigos "+ conteo);
+			
+			if(conteo >=1 ) {
+				
+				resp =  new Response<>(false, HttpStatus.OK.value(), MensajeEnum.CODIGO_EXPIRADO.getValor(),
+						null );
+				
+			}else {
+				
+				resp =  new Response<>(false, HttpStatus.OK.value(), MensajeEnum.CODIGO_INCORRECTO.getValor(),
+						null );
+				
+			}
+			
+			return resp;
+		}
+		
+		
+		//CUANDO EL CODIGO ES CORRECTO
+		if( login.getFecCodSeguridad() != null && !login.getFecCodSeguridad().isEmpty() ) {
+			
+			//Validando vigencia del Codigo de Autenticacion
+			datos = consultaGenericaPorQuery( loginUtil.difTiempo( login.getIdLogin() ) );
+			mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+			
+			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),"","Datos Codigo Seguridad "+ mapping);
+			
+			Integer diferencia = Integer.parseInt(mapping.get(0).get("diferencia").toString());
+			
+			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),"","Diferencia de Tiempo "+ diferencia);
+			
+			// 198498 <= 390
+			if( diferencia <= tiempoCodigo ) {
+				resp =  new Response<>(false, HttpStatus.OK.value(), MensajeEnum.CODIGO_CORRECTO.getValor(),
+						null );
+			}else {
+				resp =  new Response<>(false, HttpStatus.OK.value(), MensajeEnum.CODIGO_EXPIRADO.getValor(),
+						null );
+			}
+		}
+		
+		return resp;
+
 	}
 	
 	
