@@ -40,7 +40,9 @@ public class OauthServiceImpl extends UtileriaService implements OauthService {
 	public Response<Object> acceder(String user, String contrasenia) throws Exception {
 		
 		List<Map<String, Object>> mapping;
+		//se detiene a obtener los datos del usuario
 		Usuario usuario= usuarioService.obtener(user);
+		//AQUI YA TIENE TODOS LOS DATOS DEL USUARIO
 		List<Map<String, Object>> datos;
 		Response<Object> resp;
 		ParametrosUtil parametrosUtil = new ParametrosUtil();
@@ -53,10 +55,12 @@ public class OauthServiceImpl extends UtileriaService implements OauthService {
 			return resp;
 		}
 		
+		//AQUI OBTIENE LOS DATOS DEL LOGIN DEL USR
 		Login login = cuentaService.obtenerLoginPorIdUsuario( usuario.getIdUsuario() );
-		
+		//FEC_BLOQUEO PUEDE QUE VAYA NULO
 		Integer intentos = cuentaService.validaNumIntentos(login.getIdLogin(), login.getFecBloqueo(), login.getNumIntentos());
 		
+		//SI LA CONTRASENIA ES DIFERENTE ENTRA ESTA VALIDACION
 		if ( !passwordEncoder.matches( contrasenia, usuario.getPassword() ) && !contrasenia.equals( usuario.getPassword() ) ) {
 			intentos++;
 			Integer maxNumIntentos = cuentaService.actNumIntentos(login.getIdLogin(), intentos);
@@ -72,14 +76,14 @@ public class OauthServiceImpl extends UtileriaService implements OauthService {
 		}else {
 			cuentaService.actNumIntentos(login.getIdLogin(), 0);
 		}
-		
+	//SI EL ESTATUS DE LA CUENTA ES PREACTIVO ENTRA AL METODO NOTA: PREGUNTAR PORQUE NO MEJOR SE USO EL CAMPO BOOLEAN
 		if( login.getEstatusCuenta().equalsIgnoreCase( BdConstantes.ESTATUS_PRE_ACTIVO ) ) {
 			
 			resp =  new Response<>(false, HttpStatus.OK.value(), MensajeEnum.USUARIO_PREACTIVO.getValor(),
 					null );
 			
 			return resp;
-			
+			//SI ESTA DESCATIVADA LA CUENTA REGRESA ESTE MENSAJE "DESACTIVADA"
 		}else if ( login.getEstatusCuenta().equalsIgnoreCase( BdConstantes.ESTATUS_DESACTIVADO ) ) {
 			
 			resp =  new Response<>(false, HttpStatus.OK.value(), MensajeEnum.ESTATUS_DESACTIVADO.getValor(),
@@ -89,6 +93,7 @@ public class OauthServiceImpl extends UtileriaService implements OauthService {
 			
 		}
 		
+		//NO FUNCIONAL PARA CU43
 		//Validacion del SIAP
 		cuentaService.validarSiap( usuario.getClaveMatricula() );
 		
@@ -122,7 +127,7 @@ public class OauthServiceImpl extends UtileriaService implements OauthService {
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
 		
 		String tiempoString = mapping.get(0).get("TIP_PARAMETRO").toString();
-		
+		//
 		Long tiempo = (long) Integer.parseInt(tiempoString);
 		
 		String token = jwtProvider.createToken(json, tiempo);

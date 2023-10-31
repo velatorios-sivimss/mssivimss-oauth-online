@@ -36,13 +36,16 @@ public class CuentaServiceImpl extends UtileriaService implements CuentaService 
 	@Override
 	public Login obtenerLoginPorIdUsuario(String idUsuario) throws IOException {
 		
+		//AQUI SE ALMECENAN LOS DATOS DE LA CONSULTA [0] SVT_LOGIN
 		List<Map<String, Object>> datos;
 		LoginUtil loginUtil = new LoginUtil();
 		List<Login> lista;
+		//CONSULTA POR ID PARA OBTENER DEL LOGIN
 		datos = consultaGenericaPorQuery( loginUtil.buscarPorIdUsuario(idUsuario) );
 		Map<String, Object> dato;
 		Login login;
 		
+		//SI ES NULO O VACIO SE INSERTAN LOS DATOS DEL USSUARIO EN LA TABLA LOGIN PARA ASI OBETENR SU ID
 		if( datos == null || datos.isEmpty() ) {
 			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
 					this.getClass().getPackage().toString(),"",CONSULTA+" "+ "No existen datos en BD, entonces se debe crear el  registro");
@@ -52,9 +55,9 @@ public class CuentaServiceImpl extends UtileriaService implements CuentaService 
 		}else {
 			lista = Arrays.asList(modelMapper.map(datos, Login[].class));
 			login = lista.get(0);
-			
+			//DUDA QUE SE HACE?
 			if( datos.get(0).get(FEC_CAMBIO_CONTRASENIA) != null) {
-				login.setFecCamContra( datos.get(0).get(FEC_CAMBIO_CONTRASENIA).toString() );
+				login.setFecCamContra(datos.get(0).get(FEC_CAMBIO_CONTRASENIA).toString() );
 			}
 
 		}
@@ -143,6 +146,8 @@ public class CuentaServiceImpl extends UtileriaService implements CuentaService 
 		
 	}
 
+	
+	//ACTUALIZAR NUMERO DE INTENTOS REGRESA: EL NUMERO MAXIMO DE INTENTOS
 	@Override
 	public Integer actNumIntentos(String idLogin, Integer numIntentos) throws IOException {
 		LoginUtil loginUtil = new LoginUtil();
@@ -154,18 +159,22 @@ public class CuentaServiceImpl extends UtileriaService implements CuentaService 
 
 	@SuppressWarnings("unchecked")
 	@Override
+	//FECHA DE BLOQUEO PUEDE QUE VAYA NULO SI EL REGISTRO RECIEN SE INSERTO
 	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws Exception {
 		List<Map<String, Object>> datos;
 		ParametrosUtil parametrosUtil = new ParametrosUtil();
 		List<Map<String, Object>> mapping;
+		//NULL
 		Integer tiempoBloqueo;
 		LoginUtil loginUtil = new LoginUtil();
 		Integer intentos = Integer.parseInt(numIntentos);
 		
 		datos = consultaGenericaPorQuery( parametrosUtil.tiempoBloqueo() );
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+		//SE ASIGNA EL VALOR DE 5
 		tiempoBloqueo =  Integer.parseInt(mapping.get(0).get(TIP_PARAMETRO).toString());
 		
+		//EN CASO QUE VENGA EN NULL SOLO SE REGRESA: intentos
 		if( fechaBloqueo!=null && !fechaBloqueo.isEmpty() ) {
 			
 			datos = consultaGenericaPorQuery( loginUtil.difTiempoBloqueo( idLogin ) );

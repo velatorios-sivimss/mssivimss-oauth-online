@@ -68,6 +68,7 @@ public class LoginUtil {
 		return lista;
 	}
 	
+	//numIntentos=0 , maxNumIntentos=1
 	public String actNumIntentos( String idLogin, Integer numIntentos, Integer maxNumIntentos ) {
 		
 		StringBuilder query = new StringBuilder(BdConstantes.UPDATE);
@@ -93,6 +94,7 @@ public class LoginUtil {
 		
 		for(int i=0; i<longitud; i++) {
 			
+			// ES NUMEROS ENTRE 0 Y 10
 			numAleatorio = random.nextInt(10);
 			query.append( numAleatorio );
 		}

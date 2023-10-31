@@ -13,6 +13,9 @@ public class Login {
 	@SerializedName("ID_USUARIO")
 	private String idUsuario;
 	
+	@SerializedName("ID_CONTRATANTE")
+	private String idContratante;
+	
 	@SerializedName("NUM_INTENTOS")
 	private String numIntentos;
 	

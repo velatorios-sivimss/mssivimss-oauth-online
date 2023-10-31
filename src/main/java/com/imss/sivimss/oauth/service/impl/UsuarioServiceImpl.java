@@ -31,10 +31,12 @@ public class UsuarioServiceImpl extends UtileriaService implements UsuarioServic
 		
 		Usuario usuario= new Usuario();
 		List<Map<String, Object>> mapping;
+		//se manda a metodo buscar usuario
 		String query = usuario.buscarUsuario(user);
 		
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+ query);
 		
+		//MANDA A EJECUTAR LA CONSULTAR
 		List<Map<String, Object>> datos = consultaGenericaPorQuery( query );
 		
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
