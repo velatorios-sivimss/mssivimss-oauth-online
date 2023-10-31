@@ -166,7 +166,7 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 
 	@Override
 	public Response<Object> validarCodigo(String user, String codigo) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 	
