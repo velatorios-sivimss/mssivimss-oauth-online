@@ -35,8 +35,8 @@ public class Contratante {
 	private String password;
 	private String paterno;
 	private String statusCuenta;
-	private String idVelatorio;
-	private String idDelegacion;
+	private String idPais;
+	private String idEstado;
 	private String curp;
 	private String claveUsuario;
 	private String activo;
@@ -55,13 +55,9 @@ public class Contratante {
 		if( datos.get("CVE_MATRICULA") != null ) {
 			this.claveMatricula = datos.get("CVE_MATRICULA").toString();
 		}
-		
-		if( datos.get("ID_DELEGACION") != null ) {
-			this.idDelegacion = datos.get("ID_DELEGACION").toString();
-		}
-		
-		if( datos.get("ID_VELATORIO") != null ) {
-			this.idVelatorio = datos.get("ID_VELATORIO").toString();
+			this.idPais = datos.get("ID_PAIS").toString();
+		if( datos.get("ID_ESTADO") != null ) {
+			this.idEstado = datos.get("ID_ESTADO").toString();
 		}
 		
 		this.curp = datos.get("CVE_CURP").toString();

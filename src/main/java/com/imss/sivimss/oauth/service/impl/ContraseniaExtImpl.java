@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.imss.sivimss.oauth.beans.Contratante;
-import com.imss.sivimss.oauth.beans.Usuario;
 import com.imss.sivimss.oauth.exception.BadRequestException;
 import com.imss.sivimss.oauth.model.Login;
 import com.imss.sivimss.oauth.model.request.CorreoRequest;
@@ -22,7 +21,6 @@ import com.imss.sivimss.oauth.service.ContraseniaExtService;
 import com.imss.sivimss.oauth.service.ContratanteService;
 import com.imss.sivimss.oauth.service.CuentaExtService;
 import com.imss.sivimss.oauth.service.CuentaService;
-import com.imss.sivimss.oauth.service.UsuarioService;
 import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.BdConstantes;
 import com.imss.sivimss.oauth.util.ConstantsMensajes;

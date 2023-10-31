@@ -1,6 +1,7 @@
 package com.imss.sivimss.oauth.service.impl;
 
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,8 +63,6 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	 @Autowired
 	 private Database database;
 	
-	private ResultSet rs;
-
 	private Statement statement;
 	
 	@SuppressWarnings("unchecked")
@@ -142,14 +141,15 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		Map<String, Object> mapa = new HashMap<>();
 		mapa.put("nombre", usuario.getNombre() + " " + usuario.getPaterno() + " " + usuario.getMaterno());
 		mapa.put("curp", usuario.getCurp());
-		mapa.put("idDelegacion", usuario.getIdDelegacion());
-		mapa.put("idVelatorio", usuario.getIdVelatorio());
+		mapa.put("idPais", usuario.getIdPais() );
+		mapa.put("idEstado", usuario.getIdEstado());
 		mapa.put("cveMatricula", usuario.getClaveMatricula());
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdContratante());
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(mapa);
+		log.info("token ->"+json);
 		
 		datos = consultaGenericaPorQuery( parametrosUtil.tiempoToken() );
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
@@ -177,6 +177,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		Integer id = 0;
 		
 		try {
+			ResultSet rs;
 			if(contratanteR.getContratante().getIdContratante()==null) {
 				
 				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
@@ -231,7 +232,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
             statement.close();
             connection.rollback();
             connection.close();
-            throw new Exception("FALLO AL EJECUTAR LA QUERY" + e.getMessage());
+            throw new IOException("FALLO AL EJECUTAR LA QUERY" + e.getMessage());
 		}finally {
 			 try{
 	                statement.close();
