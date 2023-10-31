@@ -178,8 +178,8 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 		datos = consultaGenericaPorQuery( parametrosUtil.tiempoCodigo() );
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
 		//tiempoCodigo = 390 *6.5 HRS DEBE DURAR 30 MINS
-		Integer tiempoCodigo = Integer.parseInt(mapping.get(0).get(BdConstantes.TIP_PARAMETRO).toString());
-		
+		//Integer tiempoCodigo = Integer.parseInt(mapping.get(0).get(BdConstantes.TIP_PARAMETRO).toString());
+		Integer tiempoCodigo = 30;
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
 				this.getClass().getPackage().toString(),"","Tiempo Vida Codigo "+ tiempoCodigo);
 		

@@ -202,8 +202,8 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 				if (rs.next()) {
 					contratanteR.getContratante().setIdDomicilio(rs.getInt(1));
 				}
-
-				statement.executeUpdate(contratante.insertarContratante(contratanteR.getContratante(), contrasenia, user),
+				String hash = passwordEncoder.encode(contrasenia);      
+				statement.executeUpdate(contratante.insertarContratante(contratanteR.getContratante(), hash, user),
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
