@@ -1,20 +1,15 @@
 package com.imss.sivimss.oauth.service.impl;
 
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +60,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	private ContraseniaService contraseniaService;
 	
 	 @Autowired
-	    private Database database;
+	 private Database database;
 	
 	private ResultSet rs;
 
@@ -214,7 +209,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 				if (rs.next()) {
 					id= rs.getInt(1);
 					log.info(id.toString());
-					String credenciales = "Usuario: "+user+" Pass: "+contrasenia;
+					String credenciales = "Usuario: "+user+"<br>"+" Pass: "+contrasenia;
 					 CorreoRequest correo = new CorreoRequest(contratanteR.getNombre(), credenciales, contratanteR.getCorreo(), AppConstantes.USR_CONTRASENIA);
 						//Hacemos el consumo para enviar el codigo por correo
 						Response <Object> resp = providerRestTemplate.consumirServicio(correo, urlEnvioCorreo);

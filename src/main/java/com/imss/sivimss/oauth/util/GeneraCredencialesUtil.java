@@ -1,15 +1,13 @@
 package com.imss.sivimss.oauth.util;
 
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
 public class GeneraCredencialesUtil {
+	
+	private static final Random RANDOM = new Random();
 
-	
-	
-	
 	public String obtenerUser(Integer numberUser, String nombreCompleto, String paterno) {
 		String[] obtieneNombre = nombreCompleto.split(" ");
         String nombre = obtieneNombre[0];
@@ -21,10 +19,8 @@ public class GeneraCredencialesUtil {
 	}
 
 	public String generarContrasenia(String nombreCompleto, String paterno) {
-		//Random rand = SecureRandom.getInstanceStrong();  
-		Random rand = new Random();
         String setOfCharacters = "#$^+=!*()@%&";
-        int randomInt =rand.nextInt(setOfCharacters.length());
+        int randomInt =RANDOM.nextInt(setOfCharacters.length());
         String[] obtieneNombre = nombreCompleto.split(" ");
         String nombre = obtieneNombre[0];
         for(int i=1; nombre.length()>i; i++  ) {
