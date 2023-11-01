@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imss.sivimss.oauth.service.CatalogosService;
-import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.ConstantsMensajes;
 import com.imss.sivimss.oauth.util.Response;
 import lombok.AllArgsConstructor;

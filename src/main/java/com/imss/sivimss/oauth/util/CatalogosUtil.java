@@ -135,10 +135,9 @@ public class CatalogosUtil {
 		query.append( "SVC_CONTRATANTE SV " );
 		query.append( "INNER JOIN SVC_PERSONA SP ON SV.ID_PERSONA = SP.ID_PERSONA " );
 		if(curp!=null) {
-			query.append( "WHERE SP.CVE_CURP = '"+curp+"'" );
-		}
-		if(rfc!=null){
-			query.append( " WHERE SP.CVE_RFC =  '"+rfc+"'" );
+			query.append( " AND SP.CVE_CURP = '"+curp+"'" );
+		}else{
+			query.append( " AND SP.CVE_RFC =  '"+rfc+"'" );
 		}
 		
 		return query.toString();
