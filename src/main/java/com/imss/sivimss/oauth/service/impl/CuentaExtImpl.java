@@ -2,6 +2,7 @@ package com.imss.sivimss.oauth.service.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -15,7 +16,8 @@ import com.imss.sivimss.oauth.model.Login;
 import com.imss.sivimss.oauth.service.CuentaExtService;
 import com.imss.sivimss.oauth.util.LogUtil;
 import com.imss.sivimss.oauth.util.LoginExtUtil;
-import com.imss.sivimss.oauth.util.LoginUtil;
+import com.imss.sivimss.oauth.util.MensajeEnum;
+import com.imss.sivimss.oauth.util.ParametrosUtil;
 
 @Service
 public class CuentaExtImpl  extends UtileriaService implements CuentaExtService{
@@ -107,5 +109,75 @@ public class CuentaExtImpl  extends UtileriaService implements CuentaExtService{
 		
 		return exito;
 	}
+	
+	@Override
+	public Integer actNumIntentos(String idLogin, Integer numIntentos) throws IOException {
+		LoginExtUtil loginUtil = new LoginExtUtil();
+		Integer maxNumIntentos = obtenerMaxNumIntentos();
+		
+		actualizaGenericoPorQuery( loginUtil.actNumIntentos(idLogin, numIntentos, maxNumIntentos) );
+		return maxNumIntentos;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	//FECHA DE BLOQUEO PUEDE QUE VAYA NULO SI EL REGISTRO RECIEN SE INSERTO
+	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws Exception {
+		List<Map<String, Object>> datos;
+		ParametrosUtil parametrosUtil = new ParametrosUtil();
+		List<Map<String, Object>> mapping;
+		//NULL
+		Integer tiempoBloqueo;
+		LoginExtUtil loginUtil = new LoginExtUtil();
+		Integer intentos = Integer.parseInt(numIntentos);
+		
+		datos = consultaGenericaPorQuery( parametrosUtil.tiempoBloqueo() );
+		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+		//SE ASIGNA EL VALOR DE 5
+		tiempoBloqueo =  Integer.parseInt(mapping.get(0).get(TIP_PARAMETRO).toString());
+		
+		//EN CASO QUE VENGA EN NULL SOLO SE REGRESA: intentos
+		if( fechaBloqueo!=null && !fechaBloqueo.isEmpty() ) {
+			
+			datos = consultaGenericaPorQuery( loginUtil.difTiempoBloqueo( idLogin ) );
+			mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+			
+			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),"","Datos Fecha Bloqueo "+ mapping);
+			
+			Integer diferencia = Integer.parseInt(mapping.get(0).get("diferencia").toString());
+			
+			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),"","Diferencia de Tiempo "+ diferencia);
+			
+			if( diferencia > tiempoBloqueo ) {
+				//resetear numBloqueo
+				intentos = 0;
+				actualizaGenericoPorQuery( loginUtil.actNumIntentos(idLogin, 0, 1) );
+			}else {
+				throw new BadRequestException(HttpStatus.BAD_REQUEST, MensajeEnum.INTENTOS_FALLIDOS.getValor());
+			}
+
+		}
+		
+		return intentos;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer obtenerMaxNumIntentos()  throws IOException{
+		Integer maxNumIntentos;
+		List<Map<String, Object>> datos;
+		ParametrosUtil parametrosUtil = new ParametrosUtil();
+		List<Map<String, Object>> mapping;
+		
+		datos = consultaGenericaPorQuery( parametrosUtil.numIntentos() );
+		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+		
+		maxNumIntentos = Integer.parseInt(mapping.get(0).get(TIP_PARAMETRO).toString());
+		
+		return maxNumIntentos;
+	}
+	
 	
 }

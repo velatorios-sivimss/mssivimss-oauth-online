@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imss.sivimss.oauth.service.ContraseniaExtService;
-import com.imss.sivimss.oauth.service.ContraseniaService;
 import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.LogUtil;
 import com.imss.sivimss.oauth.util.Response;

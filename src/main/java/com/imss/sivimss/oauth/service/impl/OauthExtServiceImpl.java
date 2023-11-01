@@ -23,10 +23,9 @@ import com.imss.sivimss.oauth.exception.BadRequestException;
 import com.imss.sivimss.oauth.model.Login;
 import com.imss.sivimss.oauth.model.request.CorreoRequest;
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
-import com.imss.sivimss.oauth.service.ContraseniaService;
+import com.imss.sivimss.oauth.service.ContraseniaExtService;
 import com.imss.sivimss.oauth.service.ContratanteService;
 import com.imss.sivimss.oauth.service.CuentaExtService;
-import com.imss.sivimss.oauth.service.CuentaService;
 import com.imss.sivimss.oauth.service.OauthExtService;
 import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.BdConstantes;
@@ -53,12 +52,8 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	@Autowired
 	private CuentaExtService cuentaService;
 	
-	
 	@Autowired
-	private CuentaService cuentaServices;
-	
-	@Autowired
-	private ContraseniaService contraseniaService;
+	private ContraseniaExtService contraseniaService;
 	
 	 @Autowired
 	 private Database database;
@@ -88,12 +83,12 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		//AQUI OBTIENE LOS DATOS DEL LOGIN DEL USR
 		Login login = cuentaService.obtenerLoginPorIdContratante( usuario.getIdContratante() );
 		//FEC_BLOQUEO PUEDE QUE VAYA NULO
-		Integer intentos = cuentaServices.validaNumIntentos(login.getIdLogin(), login.getFecBloqueo(), login.getNumIntentos());
+		Integer intentos = cuentaService.validaNumIntentos(login.getIdLogin(), login.getFecBloqueo(), login.getNumIntentos());
 		
 		//SI LA CONTRASENIA ES DIFERENTE ENTRA ESTA VALIDACION
 		if ( !passwordEncoder.matches( contrasenia, usuario.getPassword() ) && !contrasenia.equals( usuario.getPassword() ) ) {
 			intentos++;
-			Integer maxNumIntentos = cuentaServices.actNumIntentos(login.getIdLogin(), intentos);
+			Integer maxNumIntentos = cuentaService.actNumIntentos(login.getIdLogin(), intentos);
 			
 			if( intentos >= maxNumIntentos ) {
 				mensaje =  MensajeEnum.INTENTOS_FALLIDOS.getValor();
@@ -104,7 +99,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 			throw new BadRequestException(HttpStatus.BAD_REQUEST, mensaje);
 			
 		}else {
-			cuentaServices.actNumIntentos(login.getIdLogin(), 0);
+			cuentaService.actNumIntentos(login.getIdLogin(), 0);
 		}
 	//SI EL ESTATUS DE LA CUENTA ES PREACTIVO ENTRA AL METODO NOTA: PREGUNTAR PORQUE NO MEJOR SE USO EL CAMPO BOOLEAN
 		if( login.getEstatusCuenta().equalsIgnoreCase( BdConstantes.ESTATUS_PRE_ACTIVO ) ) {

@@ -23,13 +23,13 @@ public class CatalogosController {
 	@Autowired
 	private CatalogosService catalogosService;
 	
-	@PostMapping("/consulta")
+	/*@PostMapping("/consulta")
 	public Response<Object> consultaListaGenerica() throws IOException {
 		
 		return new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(),
 				catalogosService.consulta() );
 
-	}
+	}*/
 	
 	@PostMapping("/consulta/rfc-curp")
 	public Response<Object> consultaRfcCurp(@RequestBody Map<String, Object> datos) throws IOException {

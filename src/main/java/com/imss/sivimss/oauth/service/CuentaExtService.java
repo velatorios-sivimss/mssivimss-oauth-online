@@ -11,5 +11,11 @@ public interface CuentaExtService {
 	public Login obtenerLoginPorCveContratante(String contratante) throws IOException;
 
 	public Boolean actualizarContra(String idLogin, String idContratante, String contraNueva) throws IOException;
+	
+	public Integer actNumIntentos(String idLogin, Integer numIntentos) throws IOException;
+	
+	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws Exception;
+	
+	public Integer obtenerMaxNumIntentos() throws IOException;
 
 }

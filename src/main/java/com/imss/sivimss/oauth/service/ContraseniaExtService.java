@@ -11,5 +11,7 @@ public interface ContraseniaExtService {
 	Response<Object> generarCodigo(String user) throws IOException;
 
 	Response<Object> validarCodigo(String user, String codigo) throws IOException;
+	
+	public Integer validarFecha(String fecha) throws Exception;
 
 }

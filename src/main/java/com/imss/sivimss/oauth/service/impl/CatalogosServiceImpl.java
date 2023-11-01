@@ -8,17 +8,12 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.imss.sivimss.oauth.beans.Contratante;
-import com.imss.sivimss.oauth.model.response.Catalogos;
-import com.imss.sivimss.oauth.model.response.CatalogosResponse;
 import com.imss.sivimss.oauth.service.CatalogosService;
 import com.imss.sivimss.oauth.util.CatalogosUtil;
 import com.imss.sivimss.oauth.util.LogUtil;
-import com.imss.sivimss.oauth.util.MensajeEnum;
-import com.imss.sivimss.oauth.util.Response;
 
 @Service
 public class CatalogosServiceImpl extends UtileriaService implements CatalogosService {
@@ -26,7 +21,7 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 	@Autowired
 	private LogUtil logUtil;
 	
-	@Override
+/*	@Override
 	public CatalogosResponse consulta() throws IOException {
 		CatalogosUtil catalogosUtil = new CatalogosUtil();
 		CatalogosResponse catalogosResponse = new CatalogosResponse();
@@ -86,7 +81,7 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 		catalogosResponse.setCatalogos(catalogos);
 		
 		return catalogosResponse;
-	}
+	} */
 
 	@SuppressWarnings("unchecked")
 	@Override
