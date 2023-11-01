@@ -116,35 +116,7 @@ public class CuentaServiceImpl extends UtileriaService implements CuentaService 
 		return exito;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void validarSiap(String cveUsuario) throws IOException {
-		List<Map<String, Object>> datos;
-		ParametrosUtil parametrosUtil = new ParametrosUtil();
-		List<Map<String, Object>> mapping;
-		String estatusSiap = "";
-		
-		if(cveUsuario == null || cveUsuario.isEmpty()) {
-			return; 
-		}
-		
-		datos = consultaGenericaPorQuery( parametrosUtil.consultarSiap() );
-		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
-		
-		String siap = mapping.get(0).get(TIP_PARAMETRO).toString();
-		
-		if( siap.equalsIgnoreCase("true") ) {
-			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
-					this.getClass().getPackage().toString(),"",CONSULTA+" "+
-			"Se debe consultar el SIAP");
-			estatusSiap = consultaSiap(cveUsuario);
-		}
-		
-		if( siap.equalsIgnoreCase("true") && !estatusSiap.equalsIgnoreCase(AppConstantes.SIAP_ACTIVO) ) {
-			throw new BadRequestException(HttpStatus.OK, MensajeEnum.SIAP_DESACTIVADO.getValor());
-		}
-		
-	}
+
 
 	
 	//ACTUALIZAR NUMERO DE INTENTOS REGRESA: EL NUMERO MAXIMO DE INTENTOS

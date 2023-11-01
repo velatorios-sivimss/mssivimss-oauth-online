@@ -9,7 +9,6 @@ package com.imss.sivimss.oauth.util;
  */
 public class BdConstantes {
 	
-	public static final String SELECT_USUARIOS = "SELECT * FROM SVT_USUARIOS US ";
 	public static final String SELECT_CONTRATANTE = "SELECT * FROM SVC_CONTRATANTE SC ";
 	public static final String WHERE = "WHERE ";
 	public static final String AND = "AND ";

@@ -232,7 +232,8 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
             statement.close();
             connection.rollback();
             connection.close();
-            throw new IOException("FALLO AL EJECUTAR LA QUERY" + e.getMessage());
+            log.info("FALLO AL EJECUTAR LA QUERY" + e.getMessage());
+            throw new IOException("5");
 		}finally {
 			 try{
 	                statement.close();
