@@ -124,7 +124,7 @@ private static final String SVT_LOGIN = "SVT_LOGIN";
 				+ "FROM     SVT_LOGIN LOGIN\r\n"
 				+ "WHERE     LOGIN.ID_LOGIN = '");
 		query.append( idLogin );
-		query.append("'\r\n"
+		query.append(BdConstantes.RN
 				+ "LIMIT     1");
 		
 		return query.toString();
@@ -151,7 +151,7 @@ private static final String SVT_LOGIN = "SVT_LOGIN";
 				+ "WHERE\r\n"
 				+ "ID_LOGIN = '");
 		query.append( idLogin );
-		query.append("'\r\n"
+		query.append(BdConstantes.RN
 				+ "AND CVE_CODIGO_SEGURIDAD = '");
 		query.append( codigo );
 		query.append("'");
@@ -170,7 +170,7 @@ private static final String SVT_LOGIN = "SVT_LOGIN";
 				+ "FROM     SVT_LOGIN LOGIN\r\n"
 				+ "WHERE     LOGIN.ID_LOGIN ='");
 		query.append( idLogin );
-		query.append("'\r\n"
+		query.append(BdConstantes.RN
 				+ "LIMIT     1");
 		
 		return query.toString();

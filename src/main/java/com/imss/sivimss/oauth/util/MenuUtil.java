@@ -26,7 +26,7 @@ public class MenuUtil {
 		query.append( " AND RP.ID_PERMISO = 3 ");
 		query.append( "WHERE M.NUM_NIVEL = "  + nivel);
 		
-		log.info( query.toString() );
+		log.info(query.toString());
 		
 		return query.toString();
 	}
@@ -42,7 +42,7 @@ public class MenuUtil {
 	private void insertar(MenuResponse menu, List<MenuResponse> padre) {
 		
 		String idPadre= menu.getIdModuloPadre();
-		log.info( "idPadre = " + idPadre);
+		log.info( "idPadre = {}", idPadre);
 		
 		for( int i=0; i<padre.size(); i++ ) {
 			

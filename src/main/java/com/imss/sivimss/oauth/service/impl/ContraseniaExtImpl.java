@@ -1,6 +1,7 @@
 package com.imss.sivimss.oauth.service.impl;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +67,7 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+ login);
 		
 		if( !contraAnterior.isEmpty()) {
-			validar(contratante, contraAnterior, contraNueva, login, usuario);
+			validar( contraAnterior,  login, usuario);
 		}
 		
 		contraNueva = passwordEncoder.encode(contraNueva);
@@ -82,7 +83,7 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 		return resp;
 	}
 
-	private void validar(String user, String contraAnterior, String contraNueva, Login login, Contratante usuario) throws Exception {
+	private void validar( String contraAnterior, Login login, Contratante usuario) throws Exception {
 		
 		
 		Integer intentos = cuentaService.validaNumIntentos(login.getIdLogin(), login.getFecBloqueo(), login.getNumIntentos());
@@ -170,14 +171,14 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 		Login login = cuentaService.obtenerLoginPorCveContratante( contratante );
 		List<Map<String, Object>> datos;
 		List<Map<String, Object>> mapping;
-		ParametrosUtil parametrosUtil = new ParametrosUtil();
 		Response<Object> resp = null;
 		LoginExtUtil loginUtil = new LoginExtUtil();
 		
-		datos = consultaGenericaPorQuery( parametrosUtil.tiempoCodigo() );
+		/*ParametrosUtil parametrosUtil = new ParametrosUtil();
+		  datos = consultaGenericaPorQuery( parametrosUtil.tiempoCodigo() );
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
-		//tiempoCodigo = 390 *6.5 HRS DEBE DURAR 30 MINS
-		//Integer tiempoCodigo = Integer.parseInt(mapping.get(0).get(BdConstantes.TIP_PARAMETRO).toString());
+		tiempoCodigo = 390 *6.5 HRS DEBE DURAR 30 MINS
+		Integer tiempoCodigo = Integer.parseInt(mapping.get(0).get(BdConstantes.TIP_PARAMETRO).toString());*/
 		Integer tiempoCodigo = 30;
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
 				this.getClass().getPackage().toString(),"","Tiempo Vida Codigo "+ tiempoCodigo);
@@ -242,7 +243,7 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Integer validarFecha(String fecha) throws Exception {
+	public Integer validarFecha(String fecha) throws IOException, ParseException {
 		List<Map<String, Object>> datos;
 		ParametrosUtil parametrosUtil = new ParametrosUtil();
 		List<Map<String, Object>> mapping;

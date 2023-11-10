@@ -57,6 +57,8 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	
 	 @Autowired
 	 private Database database;
+	 
+	private ResultSet rs;
 	
 	private Statement statement;
 	
@@ -118,10 +120,6 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 			
 		}
 		
-		//NO FUNCIONAL PARA CU43
-		//Validacion del SIAP
-		//cuentaService.validarSiap( usuario.getClaveMatricula() );
-		
 		//Validar Fecha de la Contrasenia
 		Integer estatusContra = contraseniaService.validarFecha( login.getFecCamContra() );
 		
@@ -150,7 +148,6 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
 		
 		String tiempoString = mapping.get(0).get("TIP_PARAMETRO").toString();
-		//
 		Long tiempo = (long) Integer.parseInt(tiempoString);
 		
 		String token = jwtProvider.createToken(json, tiempo);
@@ -165,34 +162,31 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	@SuppressWarnings("unchecked")
 	@Override
 	public Response<Object> registrarContratante(PersonaRequest contratanteR) throws Exception {
+		Response <Object>resp = new Response<>();
 		GeneraCredencialesUtil generaCredenciales = new GeneraCredencialesUtil();  
-		Connection connection = database.getConnection();
-	        connection.setAutoCommit(false);
 		Contratante contratante = new Contratante();
 		Integer id = 0;
+		Connection connection = database.getConnection();
 		
 		try {
-			ResultSet rs;
-			if(contratanteR.getContratante().getIdContratante()==null) {
-				
-				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
-			//String contrasenia= generarContrasenia(contratanteR.getNombre(), contratanteR.getPaterno());
+			
 			statement = connection.createStatement();
+			connection.setAutoCommit(false);
+				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
 			List<Map<String, Object>> mapping;
 			String query = contratante.cuentaUsuarios();
 			List<Map<String, Object>> datos = consultaGenericaPorQuery( query );
 			mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
 			Integer numberUser = Integer.parseInt(mapping.get(0).get("max").toString());
 			String user = generaCredenciales.obtenerUser(numberUser,contratanteR.getNombre(), contratanteR.getPaterno());
-			//String user =obtenerUser(numberUser,contratanteR.getNombre(), contratanteR.getPaterno());
-				statement.executeUpdate(contratante.insertarPersona(contratanteR),
+			statement.executeUpdate(contratante.insertarPersona(contratanteR),
 						Statement.RETURN_GENERATED_KEYS);
-				rs = statement.getGeneratedKeys();
-				if (rs.next()) {
-					contratanteR.getContratante().setIdPersona(rs.getInt(1));
-				}
+					  rs = statement.getGeneratedKeys();
+					  if (rs.next()) {
+							contratanteR.getContratante().setIdPersona(rs.getInt(1));
+					  }
 				statement.executeUpdate(
-						contratante.insertarDomicilio(contratanteR.getDomicilio(), contratanteR.getContratante().getIdDomicilio()),
+						contratante.insertarDomicilio(contratanteR.getDomicilio()),
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
@@ -204,82 +198,44 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
 					id= rs.getInt(1);
-					log.info(id.toString());
-					String credenciales = "<b>Usuario:</b> "+user+"<br> <b>Pass: </b>"+contrasenia;
-					 CorreoRequest correo = new CorreoRequest(contratanteR.getNombre(), credenciales, contratanteR.getCorreo(), AppConstantes.USR_CONTRASENIA);
-						//Hacemos el consumo para enviar el codigo por correo
-						Response <Object> resp = providerRestTemplate.consumirServicio(correo, urlEnvioCorreo);
-						
-						if (resp.getCodigo() != 200) {
-							return resp;
-						}
-					
+					log.info(id.toString());  
 				}
-			}else {
-				statement.executeUpdate(contratante.insertarPersona(contratanteR),
-						Statement.RETURN_GENERATED_KEYS);
-				statement.executeUpdate(
-						contratante.insertarDomicilio(contratanteR.getDomicilio(), contratanteR.getContratante().getIdDomicilio()),
-						Statement.RETURN_GENERATED_KEYS);
-			}
+			
+				String credenciales = "<b>Nombre completo del Usuario:</b> "+contratanteR.getNombre()+" "+contratanteR.getPaterno()+" "+contratanteR.getMaterno()+"<br> <b>Clave de usuario: </b>"+user +"<br> <b>Contraseña: </b>"+contrasenia;
+				CorreoRequest correo = new CorreoRequest(user, credenciales, contratanteR.getCorreo(), AppConstantes.USR_CONTRASENIA);
+					//Hacemos el consumo para enviar el codigo por correo
+				  resp = providerRestTemplate.consumirServicio(correo, urlEnvioCorreo);
+					connection.commit();
 		}catch (Exception e) {
-            log.info(e.getMessage());
-            statement.close();
-            connection.rollback();
-            connection.close();
-            log.info("FALLO AL EJECUTAR LA QUERY" + e.getMessage());
-            throw new IOException("5");
-		}finally {
-			 try{
-	                statement.close();
-	                connection.commit();
-	                connection.close();
-	            }catch (SQLException se){
-	                log.info(se.getMessage());
-	            }
-		}
-     
-	 
-		return  new Response<>(false, HttpStatus.OK.value(), "OK",
-				id );
-	}
-
-/*	private String obtenerUser(Integer numberUser, String nombreCompleto, String paterno) {
-		String[] obtieneNombre = nombreCompleto.split(" ");
-        String nombre = obtieneNombre[0];
-        char[] apellido= paterno.toCharArray();
-        char apM = apellido[0];
-        String inicialApellido = String.valueOf(apM);
-        String formatearCeros = String.format("%03d", numberUser);
-		return nombre+inicialApellido+formatearCeros;
-	}
-
-	private String generarContrasenia(String nombreCompleto, String paterno) {
-		Random random = new Random();
-        String setOfCharacters = "#$^+=!*()@%&";
-        int randomInt = random.nextInt(setOfCharacters.length());
-        String[] obtieneNombre = nombreCompleto.split(" ");
-        String nombre = obtieneNombre[0];
-        for(int i=1; nombre.length()>i; i++  ) {
-        	if(nombre.charAt(i)==nombre.charAt(i-1)) {
-        	nombre=nombre.replace(nombre.charAt(i), setOfCharacters.charAt(randomInt));
-        	}
-        }
-      
-        char randomChar = setOfCharacters.charAt(randomInt);
-        char[] apellido= paterno.toCharArray();
-        
-        char apM = apellido[0];
-        String p3 = String.valueOf(apM); 
-        char ap2= apellido[1];
-        if(apM==ap2) {
-        	ap2 = setOfCharacters.charAt(randomInt);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("MM");
-		String date = sdf.format(new Date());
+			
+			throw new IOException("Fallo al ejecutar la query" + e.getMessage());
 		
-		return nombre+randomChar+"."+p3.toUpperCase()+ap2+date;
-	} */
+		}finally {
+			
+			try {
+				
+				if(statement!=null) {
+					statement.close();
+				}                               
+				if(connection!=null) {
+					connection.close();
+				}
+				
+			} catch (SQLException ex) {
+				
+				log.info(ex.getMessage());
+    
+			}
+	}
+		if (resp.getCodigo()==null) {
+			resp = new Response<>(true, HttpStatus.OK.value(), "error al enviar el correo",
+					null );
+		} else {
+			resp = new Response<>(false, HttpStatus.OK.value(), "OK",
+					id );
+		}
+		return resp;
+	}
 }
 	
 

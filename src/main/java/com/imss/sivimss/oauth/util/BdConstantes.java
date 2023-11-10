@@ -15,6 +15,7 @@ public class BdConstantes {
 	public static final String CVE_USUARIO= "CVE_USUARIO";
 	public static final String ACTIVO= "IND_ACTIVO = '1' ";
 	public static final String LIMIT= "LIMIT 1 ";
+	public static final String RN= "'\r\n";
 	public static final String SELECT= "SELECT ";
 	public static final String UPDATE= "UPDATE ";
 	
@@ -23,6 +24,14 @@ public class BdConstantes {
 	public static final String ESTATUS_DESACTIVADO= "DESACTIVADA";
 	
 	public static final String TIP_PARAMETRO= "TIP_PARAMETRO";
+	
+	public static final String REF_CORREO = "REF_CORREO"; 
+	public static final String CVE_CONTRASENIA = "CVE_CONTRASENIA"; 
+	public static final String CVE_MATRICULA = "CVE_MATRICULA"; 
+	public static final String ID_ESTADO = "ID_ESTADO";
+	public static final String FEC_ALTA = "FEC_ALTA";
+	public static final String CURRENT_DATE = "CURRENT_DATE()";
+	public static final String MAX_CONTRATANTE = "SELECT MAX(ID_CONTRATANTE)+1 AS max FROM SVC_CONTRATANTE"; 
 	
 	private BdConstantes() {
 	    throw new IllegalStateException("BdConstantes class");

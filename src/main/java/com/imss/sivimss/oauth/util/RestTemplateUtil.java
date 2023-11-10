@@ -55,7 +55,7 @@ public class RestTemplateUtil {
 			throw ioException;
 		} catch (Exception e) {
 			log.error("Fallo al consumir el servicio, {}", e.getMessage());
-			responseBody = new Response<Object>();
+			responseBody = new Response<>();
 			responseBody.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			responseBody.setError(true);
 			responseBody.setMensaje(e.getMessage());
@@ -189,7 +189,7 @@ public class RestTemplateUtil {
 	@SuppressWarnings("unchecked")
 	public Response<Object> sendPostRequestByteArrayReportesToken(String url, DatosReporteDTO body, String subject,
 			Class<?> clazz) throws IOException {
-		Response<Object> responseBody = new Response<>();
+		Response<Object> responseBody;
 		HttpHeaders headers = RestTemplateUtil.createHttpHeadersToken(subject);
 
 		HttpEntity<Object> request = new HttpEntity<>(body, headers);

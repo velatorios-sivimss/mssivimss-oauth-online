@@ -55,7 +55,7 @@ public class ContraseniaExtController {
 	}
 	
 	@PostMapping("/valida-codigo")
-	public Response<Object> validarCodigo(@RequestBody Map<String, Object> datos) throws Exception {
+	public Response<Object> validarCodigo(@RequestBody Map<String, Object> datos) throws IOException {
 		
 		String user = datos.get(AppConstantes.USUARIO).toString();
 		String codigo = datos.get(AppConstantes.CODIGO).toString();

@@ -1,9 +1,7 @@
 package com.imss.sivimss.oauth.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
