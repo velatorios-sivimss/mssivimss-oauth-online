@@ -93,8 +93,8 @@ public class Contratante {
 			Date dateF = new SimpleDateFormat("dd-MM-yyyy").parse(contratanteR.getFecNacimiento());
 	        DateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "MX"));
 		q.agregarParametroValues("FEC_NAC", "'"+fechaFormat.format(dateF)+"'");
-		q.agregarParametroValues("ID_PAIS", contratanteR.getIdPais().toString());
-		q.agregarParametroValues(BdConstantes.ID_ESTADO, contratanteR.getIdLugarNac().toString());
+		q.agregarParametroValues("ID_PAIS", ""+contratanteR.getIdPais()+"");
+		q.agregarParametroValues(BdConstantes.ID_ESTADO, ""+contratanteR.getIdLugarNac()+"");
 		q.agregarParametroValues("REF_TELEFONO", setValor(contratanteR.getTel()));
 		q.agregarParametroValues("REF_TELEFONO_FIJO", setValor(contratanteR.getTelFijo()));
 		q.agregarParametroValues(BdConstantes.REF_CORREO, setValor(contratanteR.getCorreo()));

@@ -26,7 +26,7 @@ public class MenuUtil {
 		query.append( " AND RP.ID_PERMISO = 3 ");
 		query.append( "WHERE M.NUM_NIVEL = "  + nivel);
 		
-		log.info(query.toString());
+		log.info("info {}", query);
 		
 		return query.toString();
 	}
@@ -70,7 +70,7 @@ public class MenuUtil {
 		query.append( "FROM SVC_MENSAJE " );
 		query.append( " ORDER BY ID_MENSAJE ASC" );
 		
-		log.info( query.toString() );
+		log.info("info {}", query);
 		
 		return query.toString();
 	}

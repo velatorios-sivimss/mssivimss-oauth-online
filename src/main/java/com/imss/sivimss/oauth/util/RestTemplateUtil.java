@@ -101,7 +101,7 @@ public class RestTemplateUtil {
 	}
 
 	/**
-	 * Crea los headers para la petici&oacute;n con token todo - falta agregar el
+	 * Crea los headers para la petici&oacute;n con token tod0 - falta agregar el
 	 * tema de seguridad para las peticiones
 	 *
 	 * @return
@@ -117,7 +117,7 @@ public class RestTemplateUtil {
 
 	///////////////////////////////////////////////////// peticion con archivos
 	/**
-	 * Crea los headers para la petici&oacute;n con token todo - falta agregar el
+	 * Crea los headers para la petici&oacute;n con token tod0 - falta agregar el
 	 * tema de seguridad para las peticiones
 	 *
 	 * @return

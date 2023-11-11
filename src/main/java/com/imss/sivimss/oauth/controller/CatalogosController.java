@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,7 @@ public class CatalogosController {
 		return new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(),
 				catalogosService.consulta() );
 
-	}*/
-	
+	}*/	
 	@PostMapping("/consulta/rfc-curp")
 	public Response<Object> consultaRfcCurp(@RequestBody Map<String, Object> datos) throws IOException {
 		Response<Object>response;
@@ -51,4 +51,19 @@ public class CatalogosController {
 
 	}
 
+	@GetMapping("/consulta/pais")
+	public Response<Object> consultaPais() throws IOException {
+		 return new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(),
+				catalogosService.consultaPais());
+
+	}
+	
+	@GetMapping("/consulta/estado")
+	public Response<Object> consultaEstado() throws IOException {
+		 return new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(),
+				catalogosService.consultaEstado());
+
+	}
+
+	
 }

@@ -14,7 +14,7 @@ public interface CuentaExtService {
 	
 	public Integer actNumIntentos(String idLogin, Integer numIntentos) throws IOException;
 	
-	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws Exception;
+	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws IOException;
 	
 	public Integer obtenerMaxNumIntentos() throws IOException;
 

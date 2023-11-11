@@ -122,7 +122,7 @@ public class CuentaExtImpl  extends UtileriaService implements CuentaExtService{
 	@SuppressWarnings("unchecked")
 	@Override
 	//FECHA DE BLOQUEO PUEDE QUE VAYA NULO SI EL REGISTRO RECIEN SE INSERTO
-	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws Exception {
+	public Integer validaNumIntentos(String idLogin, String fechaBloqueo, String numIntentos) throws IOException {
 		List<Map<String, Object>> datos;
 		ParametrosUtil parametrosUtil = new ParametrosUtil();
 		List<Map<String, Object>> mapping;

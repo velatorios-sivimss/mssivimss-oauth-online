@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.imss.sivimss.oauth.beans.Contratante;
 import com.imss.sivimss.oauth.service.CatalogosService;
+import com.imss.sivimss.oauth.util.BdConstantes;
 import com.imss.sivimss.oauth.util.CatalogosUtil;
 import com.imss.sivimss.oauth.util.LogUtil;
 
@@ -98,6 +99,18 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 		lista = Arrays.asList(modelMapper.map(datos, HashMap[].class));
 		contratante =  new Contratante(lista.get(0));
 		return contratante;
+	}
+
+	@Override
+	public Object consultaPais() throws IOException {
+		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+  BdConstantes.PAIS);
+		return consultaGenericaPorQuery(  BdConstantes.PAIS );
+	}
+	
+	@Override
+	public Object consultaEstado() throws IOException {
+		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+  BdConstantes.EDO);
+		return consultaGenericaPorQuery(  BdConstantes.EDO );
 	}
 
 }

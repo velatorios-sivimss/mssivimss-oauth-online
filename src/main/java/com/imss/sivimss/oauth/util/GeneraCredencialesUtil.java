@@ -24,7 +24,12 @@ public class GeneraCredencialesUtil {
         String nombre = obtieneNombre[0];
         for(int i=1; nombre.length()>i; i++  ) {
         	if(nombre.charAt(i)==nombre.charAt(i-1)) {
-        	nombre=nombre.replace(nombre.charAt(i), caracteres.charAt(randomInt));
+        		char letra = nombre.charAt(i);
+        		char caracter = caracteres.charAt(randomInt);
+        		nombre =nombre.replaceFirst(String.valueOf(letra), "?");
+        	    nombre=nombre.replace(letra, caracter);
+                nombre = nombre.replace("?", String.valueOf(letra));
+            caracteres = caracteres.replace(String.valueOf(caracter), "");
         	}
         }
       
@@ -32,7 +37,7 @@ public class GeneraCredencialesUtil {
         char[] apellido= paterno.toCharArray();
         
         char pLetra = apellido[0];//paterno 0
-        String pLetraS = String.valueOf(pLetra); //TIENE EL MISMO VALOR QUE P3
+        String pLetraS = String.valueOf(pLetra); 
         char sLetra= apellido[1];
         if(pLetra==sLetra) { //SEGUNDA LETRA PATERNO
         	sLetra = caracteres.charAt(randomInt);

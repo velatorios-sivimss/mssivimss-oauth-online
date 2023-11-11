@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.Arrays;
 
 import java.util.HashMap;
@@ -57,14 +58,14 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	
 	 @Autowired
 	 private Database database;
-	 
-	private ResultSet rs;
 	
+	 private ResultSet rs;
+	 
 	private Statement statement;
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Response<Object> accederExt(String user, String contrasenia) throws Exception {
+	public Response<Object> accederExt(String user, String contrasenia) throws IOException, ParseException {
 		
 		List<Map<String, Object>> mapping;
 		//se detiene a obtener los datos del usuario
@@ -161,7 +162,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Response<Object> registrarContratante(PersonaRequest contratanteR) throws Exception {
+	public Response<Object> registrarContratante(PersonaRequest contratanteR) throws IOException {
 		Response <Object>resp = new Response<>();
 		GeneraCredencialesUtil generaCredenciales = new GeneraCredencialesUtil();  
 		Contratante contratante = new Contratante();
@@ -181,7 +182,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 			String user = generaCredenciales.obtenerUser(numberUser,contratanteR.getNombre(), contratanteR.getPaterno());
 			statement.executeUpdate(contratante.insertarPersona(contratanteR),
 						Statement.RETURN_GENERATED_KEYS);
-					  rs = statement.getGeneratedKeys();
+			 rs = statement.getGeneratedKeys();
 					  if (rs.next()) {
 							contratanteR.getContratante().setIdPersona(rs.getInt(1));
 					  }
