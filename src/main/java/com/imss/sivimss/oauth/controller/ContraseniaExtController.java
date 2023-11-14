@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imss.sivimss.oauth.service.ContraseniaExtService;
-import com.imss.sivimss.oauth.service.ContraseniaService;
 import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.LogUtil;
 import com.imss.sivimss.oauth.util.Response;
@@ -56,7 +55,7 @@ public class ContraseniaExtController {
 	}
 	
 	@PostMapping("/valida-codigo")
-	public Response<Object> validarCodigo(@RequestBody Map<String, Object> datos) throws Exception {
+	public Response<Object> validarCodigo(@RequestBody Map<String, Object> datos) throws IOException {
 		
 		String user = datos.get(AppConstantes.USUARIO).toString();
 		String codigo = datos.get(AppConstantes.CODIGO).toString();

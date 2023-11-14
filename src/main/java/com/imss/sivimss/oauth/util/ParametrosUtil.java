@@ -51,7 +51,7 @@ public class ParametrosUtil {
 		StringBuilder query = new StringBuilder( QUERY_INICIO );
 		query.append( "'" + param + "'");
 		query.append( QUERY_FINAL );
-		log.info( query.toString() );
+		log.info("log {}", query);
 		return query.toString();
 	}
 	
@@ -59,7 +59,7 @@ public class ParametrosUtil {
 		StringBuilder query = new StringBuilder( "SELECT DATE_FORMAT(CURRENT_TIMESTAMP, '" );
 		query.append( formato );
 		query.append( "') AS tiempo" );
-		log.info( query.toString() );
+		log.info("log {}", query);
 		return query.toString();
 	}
 }

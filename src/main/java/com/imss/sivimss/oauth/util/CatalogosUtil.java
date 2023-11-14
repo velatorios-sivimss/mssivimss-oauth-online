@@ -120,4 +120,26 @@ public class CatalogosUtil {
 		
 		return query.toString();
 	}
+	
+	public String validarRfcCurp(String curp, String rfc) {
+		
+		StringBuilder query = new StringBuilder("SELECT SP.NOM_PERSONA,"
+				+ " SP.NOM_PRIMER_APELLIDO,"
+				+ " SP.NOM_SEGUNDO_APELLIDO,"
+				+ " SP.CVE_RFC,"
+				+ " SV.ID_CONTRATANTE,"
+				+ " SP.ID_PAIS,"
+				+ " SP.CVE_CURP,"
+				+ " SV.IND_ACTIVO"
+				+ " FROM ");
+		query.append( "SVC_CONTRATANTE SV " );
+		query.append( "INNER JOIN SVC_PERSONA SP ON SV.ID_PERSONA = SP.ID_PERSONA " );
+		if(curp!=null) {
+			query.append( " AND SP.CVE_CURP = '"+curp+"'" );
+		}else{
+			query.append( " AND SP.CVE_RFC =  '"+rfc+"'" );
+		}
+		
+		return query.toString();
+	}
 }

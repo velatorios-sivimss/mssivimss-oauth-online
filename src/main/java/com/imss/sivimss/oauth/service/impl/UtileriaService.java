@@ -71,8 +71,7 @@ public class UtileriaService {
 			resp = consultas.selectHashMap(query);
 
 		} catch (Exception e) {
-			log.error(FALLO_QUERY + ", {}", e.getMessage());
-			throw new IOException(FALLO_QUERY + e.getMessage());
+			throw new IOException(FALLO_QUERY  + e.getMessage());
 		}
 
 		return resp;
@@ -102,7 +101,6 @@ public class UtileriaService {
 			detalle = lista.get(0);
 			
 		} catch (Exception e) {
-			log.error(FALLO_QUERY + ", {}", e.getMessage());
 			throw new IOException(FALLO_QUERY + e.getMessage());
 		}
 		
@@ -124,7 +122,6 @@ public class UtileriaService {
 			resp = consultas.actualizar(query);
 
 		} catch (Exception e) {
-			log.error(FALLO_QUERY + ", {}", e.getMessage());
 			throw new IOException(FALLO_QUERY + e.getMessage());
 		}
 		return resp;
@@ -155,7 +152,6 @@ public class UtileriaService {
 			connection.commit();
 			
 		} catch (Exception e) {
-			log.error(FALLO_QUERY + ", {}", e.getMessage());
 			throw new IOException(FALLO_QUERY + e.getMessage());
 		}finally{
 			log.info( "cierra conexion a la base de datos" );    
@@ -175,4 +171,5 @@ public class UtileriaService {
 		
 		return exito;
 	}
+		
 }

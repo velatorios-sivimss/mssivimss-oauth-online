@@ -35,37 +35,35 @@ public class Contratante {
 	private String password;
 	private String paterno;
 	private String statusCuenta;
-	private String idVelatorio;
-	private String idDelegacion;
+	private String idPais;
+	private String idEstado;
 	private String curp;
 	private String claveUsuario;
 	private String activo;
+	
 	
 	public Contratante(Map<String, Object> datos) {
 		this.idContratante = datos.get("ID_CONTRATANTE").toString();
 		this.nombre = datos.get("NOM_PERSONA").toString();
 		this.paterno = datos.get("NOM_PRIMER_APELLIDO").toString();
 		this.materno = datos.get("NOM_SEGUNDO_APELLIDO").toString();
-		if(datos.get("REF_CORREO") != null) {
-			this.correo = datos.get("REF_CORREO").toString();
+		if(datos.get(BdConstantes.REF_CORREO) != null) {
+			this.correo = datos.get(BdConstantes.REF_CORREO).toString();
 		}
-		
-		this.password = datos.get("CVE_CONTRASENIA").toString();
-		
-		if( datos.get("CVE_MATRICULA") != null ) {
-			this.claveMatricula = datos.get("CVE_MATRICULA").toString();
+		if(datos.get(BdConstantes.CVE_CONTRASENIA)!=null) {
+			this.password = datos.get(BdConstantes.CVE_CONTRASENIA).toString();
 		}
-		
-		if( datos.get("ID_DELEGACION") != null ) {
-			this.idDelegacion = datos.get("ID_DELEGACION").toString();
+		if( datos.get(BdConstantes.CVE_MATRICULA) != null ) {
+			this.claveMatricula = datos.get(BdConstantes.CVE_MATRICULA).toString();
 		}
-		
-		if( datos.get("ID_VELATORIO") != null ) {
-			this.idVelatorio = datos.get("ID_VELATORIO").toString();
+			this.idPais = datos.get("ID_PAIS").toString();
+		if( datos.get(BdConstantes.ID_ESTADO) != null ) {
+			this.idEstado = datos.get(BdConstantes.ID_ESTADO).toString();
 		}
-		
 		this.curp = datos.get("CVE_CURP").toString();
-		this.claveUsuario = datos.get("CVE_USUARIO").toString();
+		if(datos.get(BdConstantes.CVE_USUARIO)!=null) {
+			this.claveUsuario = datos.get(BdConstantes.CVE_USUARIO).toString();
+		}
 		this.activo = datos.get("IND_ACTIVO").toString();
 	}
 	
@@ -84,13 +82,7 @@ public class Contratante {
 
 
 	public String insertarPersona(PersonaRequest contratanteR) throws ParseException {
-		final QueryHelper q ;
-		String query="";
-		if(contratanteR.getContratante().getIdContratante()==null) {
-			q = new QueryHelper("INSERT INTO SVC_PERSONA");
-		}else {
-			q = new QueryHelper("UPDATE SVC_PERSONA");
-		}
+		final QueryHelper q = new QueryHelper("INSERT INTO SVC_PERSONA");
 		q.agregarParametroValues("CVE_CURP", "'"+contratanteR.getCurp()+"'");
 		q.agregarParametroValues("NOM_PERSONA", "'" +contratanteR.getNombre()+ "'");
 		q.agregarParametroValues("NOM_PRIMER_APELLIDO", "'" +contratanteR.getPaterno()+ "'");
@@ -101,34 +93,19 @@ public class Contratante {
 			Date dateF = new SimpleDateFormat("dd-MM-yyyy").parse(contratanteR.getFecNacimiento());
 	        DateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "MX"));
 		q.agregarParametroValues("FEC_NAC", "'"+fechaFormat.format(dateF)+"'");
-		q.agregarParametroValues("ID_PAIS", contratanteR.getIdPais().toString());
-		q.agregarParametroValues("ID_ESTADO", contratanteR.getIdLugarNac().toString());
+		q.agregarParametroValues("ID_PAIS", ""+contratanteR.getIdPais()+"");
+		q.agregarParametroValues(BdConstantes.ID_ESTADO, ""+contratanteR.getIdLugarNac()+"");
 		q.agregarParametroValues("REF_TELEFONO", setValor(contratanteR.getTel()));
 		q.agregarParametroValues("REF_TELEFONO_FIJO", setValor(contratanteR.getTelFijo()));
-		q.agregarParametroValues("REF_CORREO", setValor(contratanteR.getCorreo()));
+		q.agregarParametroValues(BdConstantes.REF_CORREO, setValor(contratanteR.getCorreo()));
 		//q.agregarParametroValues(ID_USUARIO_MODIFICA, idUsuario.toString());
-		if(contratanteR.getContratante().getIdContratante()==null) {
-			q.agregarParametroValues("FEC_ALTA","CURRENT_DATE()");
-			query = q.obtenerQueryInsertar();	
-		}else {
-			q.agregarParametroValues("FEC_ACTUALIZACION","CURRENT_DATE()");
-			q.addWhere("ID_PERSONA="+contratanteR.getContratante().getIdPersona());
-			query = q.obtenerQueryActualizar();	
-		}
-		
-		log.info(query);
-		return query;
+			q.agregarParametroValues(BdConstantes.FEC_ALTA,BdConstantes.CURRENT_DATE);
+			return q.obtenerQueryInsertar();	
 	}
 
 
-	public String insertarDomicilio(DomicilioDto domicilio, Integer idDomicilio) {
-		final QueryHelper q ;
-		String query="";
-		if(idDomicilio==null) {
-			q = new QueryHelper("INSERT INTO SVT_DOMICILIO");
-		}else {
-			q = new QueryHelper("UPDATE SVT_DOMICILIO");	
-		}
+	public String insertarDomicilio(DomicilioDto domicilio) {
+		final QueryHelper q = new QueryHelper("INSERT INTO SVT_DOMICILIO");
 			q.agregarParametroValues("REF_CALLE", setValor(domicilio.getCalle()));
 			q.agregarParametroValues("NUM_EXTERIOR", setValor(domicilio.getNumExt()));
 			q.agregarParametroValues("NUM_INTERIOR", setValor(domicilio.getNumInt()));
@@ -137,29 +114,20 @@ public class Contratante {
 			q.agregarParametroValues("REF_MUNICIPIO", setValor(domicilio.getMunicipio()));
 			q.agregarParametroValues("REF_ESTADO", setValor(domicilio.getEstado()));
 			//q.agregarParametroValues(ID_USUARIO_MODIFICA, idUsuario.toString());
-		if(idDomicilio==null) {
-			q.agregarParametroValues("FEC_ALTA", "CURRENT_DATE()");
-			query = q.obtenerQueryInsertar();
-		}else {
-			q.agregarParametroValues("FEC_ACTUALIZACION", "CURRENT_DATE()");
-			q.addWhere("ID_DOMICILIO="+idDomicilio);
-			query = q.obtenerQueryActualizar();
-		}
-		
-		log.info("domicilio: "+query);
-		return query;
+			q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
+			return q.obtenerQueryInsertar();
 	}
 
 
 	public String insertarContratante(ContratanteDto contratante, String contrasenia, String user) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVC_CONTRATANTE");
 		q.agregarParametroValues("ID_PERSONA", contratante.getIdPersona().toString());
-		q.agregarParametroValues("CVE_MATRICULA", setValor(contratante.getMatricula()));
+		q.agregarParametroValues(BdConstantes.CVE_MATRICULA, setValor(contratante.getMatricula()));
 		q.agregarParametroValues("ID_DOMICILIO", contratante.getIdDomicilio().toString());
 		q.agregarParametroValues("IND_ACTIVO", "1");
-		q.agregarParametroValues("CVE_CONTRASENIA", "'"+contrasenia+"'");
-		q.agregarParametroValues("CVE_USUARIO", "'"+user+"'");
-		q.agregarParametroValues("FEC_ALTA", "CURRENT_DATE()");
+		q.agregarParametroValues(BdConstantes.CVE_CONTRASENIA, "'"+contrasenia+"'");
+		q.agregarParametroValues(BdConstantes.CVE_USUARIO, "'"+user+"'");
+		q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
 		log.info("contratante: "+q.obtenerQueryInsertar());
 		return q.obtenerQueryInsertar();
 	}
@@ -174,9 +142,7 @@ public class Contratante {
 
 
 	public String cuentaUsuarios() {
-		String query= "SELECT MAX(ID_CONTRATANTE)+1 AS max FROM SVC_CONTRATANTE";
-		return query;
+		return BdConstantes.MAX_CONTRATANTE;
 	}
-
 
 }

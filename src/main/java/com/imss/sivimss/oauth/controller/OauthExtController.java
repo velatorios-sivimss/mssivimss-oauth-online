@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
-import com.imss.sivimss.oauth.service.MenuService;
 import com.imss.sivimss.oauth.service.OauthExtService;
-import com.imss.sivimss.oauth.service.OauthService;
 import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.LogUtil;
 import com.imss.sivimss.oauth.util.Response;

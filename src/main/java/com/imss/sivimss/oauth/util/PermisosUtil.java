@@ -17,7 +17,7 @@ public class PermisosUtil {
 		query.append( BdConstantes.ACTIVO );
 		query.append( "ORDER BY ID_FUNCIONALIDAD ASC" );
 		
-		log.info( query.toString() );
+		log.info("log {}", query);
 		
 		return query.toString();
 	}
@@ -32,7 +32,7 @@ public class PermisosUtil {
 		query.append( "AND RFP.IND_ACTIVO = '1' " );
 		query.append( "ORDER BY PER.ID_PERMISO" );
 		
-		log.info( query.toString() );
+		log.info("log {}", query);
 		
 		return query.toString();
 	}
