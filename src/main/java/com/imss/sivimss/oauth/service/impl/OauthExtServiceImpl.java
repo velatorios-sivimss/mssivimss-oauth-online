@@ -84,7 +84,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		}
 		
 		//AQUI OBTIENE LOS DATOS DEL LOGIN DEL USR
-		Login login = cuentaService.obtenerLoginPorIdContratante( usuario.getIdContratante() );
+		Login login = cuentaService.obtenerLoginPorIdContratante( usuario.getIdUsuario() );
 		//FEC_BLOQUEO PUEDE QUE VAYA NULO
 		Integer intentos = cuentaService.validaNumIntentos(login.getIdLogin(), login.getFecBloqueo(), login.getNumIntentos());
 		
@@ -139,7 +139,10 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapa.put("idEstado", usuario.getIdEstado());
 		mapa.put("cveMatricula", usuario.getClaveMatricula());
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
-		mapa.put("idUsuario", usuario.getIdContratante());
+		mapa.put("idUsuario", usuario.getIdUsuario());
+		mapa.put("idContratante", usuario.getIdContratante());
+		mapa.put("idPersona", usuario.getIdPersona());
+		
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(mapa);
@@ -173,7 +176,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 			
 			statement = connection.createStatement();
 			connection.setAutoCommit(false);
-				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
+			String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
 			List<Map<String, Object>> mapping;
 			String query = contratante.cuentaUsuarios();
 			List<Map<String, Object>> datos = consultaGenericaPorQuery( query );
@@ -186,15 +189,21 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 					  if (rs.next()) {
 							contratanteR.getContratante().setIdPersona(rs.getInt(1));
 					  }
+					  String hash = passwordEncoder.encode(contrasenia); 
+					  statement.executeUpdate(contratante.insertarUsuario(contratanteR.getContratante().getIdPersona(), hash, user),
+								Statement.RETURN_GENERATED_KEYS);
+					 rs = statement.getGeneratedKeys();
+							  if (rs.next()) {
+									contratanteR.getContratante().setIdUsuario(rs.getInt(1));
+							  }
 				statement.executeUpdate(
-						contratante.insertarDomicilio(contratanteR.getDomicilio()),
+						contratante.insertarDomicilio(contratanteR.getDomicilio(), contratanteR.getContratante().getIdUsuario()),
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
 					contratanteR.getContratante().setIdDomicilio(rs.getInt(1));
-				}
-				String hash = passwordEncoder.encode(contrasenia);      
-				statement.executeUpdate(contratante.insertarContratante(contratanteR.getContratante(), hash, user),
+				}     
+				statement.executeUpdate(contratante.insertarContratante(contratanteR.getContratante()),
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {

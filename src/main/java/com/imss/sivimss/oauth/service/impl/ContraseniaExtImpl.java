@@ -71,7 +71,7 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 		}
 		
 		contraNueva = passwordEncoder.encode(contraNueva);
-		exito = cuentaService.actualizarContra(login.getIdLogin(), login.getIdContratante(), contraNueva);
+		exito = cuentaService.actualizarContra(login.getIdLogin(), login.getIdUsuario(), contraNueva);
 		
 		if (Boolean.FALSE.equals(exito)) {
 			throw new BadRequestException(HttpStatus.BAD_REQUEST, "Error al actualizar en BD");

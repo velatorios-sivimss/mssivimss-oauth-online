@@ -28,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 public class Contratante {
 	
 	private String idContratante;
+	private String idUsuario;
+	private String idPersona;
 	private String materno;
 	private String nombre;
 	private String correo;
@@ -44,6 +46,8 @@ public class Contratante {
 	
 	public Contratante(Map<String, Object> datos) {
 		this.idContratante = datos.get("ID_CONTRATANTE").toString();
+		this.idUsuario = datos.get("ID_USUARIO").toString();
+		this.idPersona = datos.get("ID_PERSONA").toString();
 		this.nombre = datos.get("NOM_PERSONA").toString();
 		this.paterno = datos.get("NOM_PRIMER_APELLIDO").toString();
 		this.materno = datos.get("NOM_SEGUNDO_APELLIDO").toString();
@@ -64,7 +68,7 @@ public class Contratante {
 		if(datos.get(BdConstantes.CVE_USUARIO)!=null) {
 			this.claveUsuario = datos.get(BdConstantes.CVE_USUARIO).toString();
 		}
-		this.activo = datos.get("IND_ACTIVO").toString();
+		this.activo = datos.get(BdConstantes.IND_ACTIVO).toString();
 	}
 	
 	
@@ -72,6 +76,7 @@ public class Contratante {
 		
 		StringBuilder query = new StringBuilder(BdConstantes.SELECT_CONTRATANTE);
 		query.append( "INNER JOIN SVC_PERSONA PER ON SC.ID_PERSONA = PER.ID_PERSONA " );
+		query.append( "INNER JOIN SVT_USUARIOS USR ON PER.ID_PERSONA = USR.ID_PERSONA " );
 		query.append( BdConstantes.WHERE );
 		query.append( BdConstantes.CVE_USUARIO + " = ");
 		query.append( "'" + user + "' " );
@@ -98,13 +103,13 @@ public class Contratante {
 		q.agregarParametroValues("REF_TELEFONO", setValor(contratanteR.getTel()));
 		q.agregarParametroValues("REF_TELEFONO_FIJO", setValor(contratanteR.getTelFijo()));
 		q.agregarParametroValues(BdConstantes.REF_CORREO, setValor(contratanteR.getCorreo()));
-		//q.agregarParametroValues(ID_USUARIO_MODIFICA, idUsuario.toString());
+		//q.agregarParametroValues(ID_USUARIO_ALTA, idUsuario.toString());
 			q.agregarParametroValues(BdConstantes.FEC_ALTA,BdConstantes.CURRENT_DATE);
 			return q.obtenerQueryInsertar();	
 	}
 
 
-	public String insertarDomicilio(DomicilioDto domicilio) {
+	public String insertarDomicilio(DomicilioDto domicilio, Integer idUsuario) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVT_DOMICILIO");
 			q.agregarParametroValues("REF_CALLE", setValor(domicilio.getCalle()));
 			q.agregarParametroValues("NUM_EXTERIOR", setValor(domicilio.getNumExt()));
@@ -113,20 +118,21 @@ public class Contratante {
 			q.agregarParametroValues("REF_COLONIA", setValor(domicilio.getColonia()));
 			q.agregarParametroValues("REF_MUNICIPIO", setValor(domicilio.getMunicipio()));
 			q.agregarParametroValues("REF_ESTADO", setValor(domicilio.getEstado()));
-			//q.agregarParametroValues(ID_USUARIO_MODIFICA, idUsuario.toString());
+			q.agregarParametroValues(BdConstantes.ID_USUARIO_ALTA, idUsuario.toString());
 			q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
 			return q.obtenerQueryInsertar();
 	}
 
 
-	public String insertarContratante(ContratanteDto contratante, String contrasenia, String user) {
+	public String insertarContratante(ContratanteDto contratante) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVC_CONTRATANTE");
 		q.agregarParametroValues("ID_PERSONA", contratante.getIdPersona().toString());
 		q.agregarParametroValues(BdConstantes.CVE_MATRICULA, setValor(contratante.getMatricula()));
 		q.agregarParametroValues("ID_DOMICILIO", contratante.getIdDomicilio().toString());
 		q.agregarParametroValues("IND_ACTIVO", "1");
-		q.agregarParametroValues(BdConstantes.CVE_CONTRASENIA, "'"+contrasenia+"'");
-		q.agregarParametroValues(BdConstantes.CVE_USUARIO, "'"+user+"'");
+		//q.agregarParametroValues(BdConstantes.CVE_CONTRASENIA, "'"+contrasenia+"'");
+		//q.agregarParametroValues(BdConstantes.CVE_USUARIO, "'"+user+"'");
+		q.agregarParametroValues(BdConstantes.ID_USUARIO_ALTA, contratante.getIdUsuario().toString());
 		q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
 		log.info("contratante: "+q.obtenerQueryInsertar());
 		return q.obtenerQueryInsertar();
@@ -143,6 +149,21 @@ public class Contratante {
 
 	public String cuentaUsuarios() {
 		return BdConstantes.MAX_CONTRATANTE;
+	}
+
+
+	public String insertarUsuario(Integer idPersona, String contrasenia, String user) {
+		final QueryHelper q = new QueryHelper("INSERT INTO SVT_USUARIOS");
+		q.agregarParametroValues("ID_PERSONA", idPersona.toString());
+		q.agregarParametroValues("ID_OFICINA", "3");
+		q.agregarParametroValues("ID_ROL", "150");
+		q.agregarParametroValues("IND_ACTIVO", "1");
+		q.agregarParametroValues(BdConstantes.CVE_CONTRASENIA, "'"+contrasenia+"'");
+		q.agregarParametroValues(BdConstantes.CVE_USUARIO, "'"+user+"'");
+		q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
+		q.agregarParametroValues("IND_CONTRATANTE", "1");
+		log.info("usuario: "+q.obtenerQueryInsertar());
+		return q.obtenerQueryInsertar();
 	}
 
 }
