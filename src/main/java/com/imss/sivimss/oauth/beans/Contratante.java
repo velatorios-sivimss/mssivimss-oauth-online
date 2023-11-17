@@ -47,7 +47,7 @@ public class Contratante {
 	public Contratante(Map<String, Object> datos) {
 		this.idContratante = datos.get("ID_CONTRATANTE").toString();
 		this.idUsuario = datos.get("ID_USUARIO").toString();
-		this.idPersona = datos.get("ID_PERSONA").toString();
+		this.idPersona = datos.get(BdConstantes.ID_PERSONA).toString();
 		this.nombre = datos.get("NOM_PERSONA").toString();
 		this.paterno = datos.get("NOM_PRIMER_APELLIDO").toString();
 		this.materno = datos.get("NOM_SEGUNDO_APELLIDO").toString();
@@ -126,12 +126,10 @@ public class Contratante {
 
 	public String insertarContratante(ContratanteDto contratante) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVC_CONTRATANTE");
-		q.agregarParametroValues("ID_PERSONA", contratante.getIdPersona().toString());
+		q.agregarParametroValues(BdConstantes.ID_PERSONA, contratante.getIdPersona().toString());
 		q.agregarParametroValues(BdConstantes.CVE_MATRICULA, setValor(contratante.getMatricula()));
 		q.agregarParametroValues("ID_DOMICILIO", contratante.getIdDomicilio().toString());
 		q.agregarParametroValues("IND_ACTIVO", "1");
-		//q.agregarParametroValues(BdConstantes.CVE_CONTRASENIA, "'"+contrasenia+"'");
-		//q.agregarParametroValues(BdConstantes.CVE_USUARIO, "'"+user+"'");
 		q.agregarParametroValues(BdConstantes.ID_USUARIO_ALTA, contratante.getIdUsuario().toString());
 		q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
 		log.info("contratante: "+q.obtenerQueryInsertar());
@@ -154,7 +152,7 @@ public class Contratante {
 
 	public String insertarUsuario(Integer idPersona, String contrasenia, String user) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVT_USUARIOS");
-		q.agregarParametroValues("ID_PERSONA", idPersona.toString());
+		q.agregarParametroValues(BdConstantes.ID_PERSONA, idPersona.toString());
 		q.agregarParametroValues("ID_OFICINA", "3");
 		q.agregarParametroValues("ID_ROL", "150");
 		q.agregarParametroValues("IND_ACTIVO", "1");

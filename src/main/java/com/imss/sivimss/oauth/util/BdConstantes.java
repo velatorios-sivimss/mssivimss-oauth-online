@@ -28,6 +28,7 @@ public class BdConstantes {
 	public static final String TIP_PARAMETRO= "TIP_PARAMETRO";
 	
 	public static final String REF_CORREO = "REF_CORREO"; 
+	public static final String ID_PERSONA = "ID_PERSONA"; 
 	public static final String CVE_CONTRASENIA = "CVE_CONTRASENIA"; 
 	public static final String CVE_MATRICULA = "CVE_MATRICULA"; 
 	public static final String ID_ESTADO = "ID_ESTADO";
