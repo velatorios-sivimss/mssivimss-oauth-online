@@ -9,24 +9,24 @@ public class LoginExtUtil {
 
 private static final String SVT_LOGIN = "SVT_LOGIN";
 	
-	public String buscarPorIdContratante(String idContratante) {
+	public String buscarPorIdContratante(String idUsuario) {
 		
 		StringBuilder query = new StringBuilder("SELECT ");
 		query.append( "* " );
 		query.append( "FROM "+ SVT_LOGIN  );
-		query.append( " WHERE ID_CONTRATANTE = ");
-		query.append( idContratante + " ");
+		query.append( " WHERE ID_USUARIO = ");
+		query.append( idUsuario + " ");
 		query.append( BdConstantes.LIMIT );
 		
 		return query.toString();
 	}
 	
 	
-	public String insertar(String idContratante) {
+	public String insertar(String idUsuario) {
 		
 		StringBuilder query = new StringBuilder("INSERT INTO ");
-		query.append( SVT_LOGIN + "(`ID_CONTRATANTE`) VALUES " );
-		query.append( "('" +idContratante + "')");
+		query.append( SVT_LOGIN + "(`ID_USUARIO`) VALUES " );
+		query.append( "('" +idUsuario + "')");
 		
 		return query.toString();
 	}
@@ -36,23 +36,23 @@ private static final String SVT_LOGIN = "SVT_LOGIN";
 		StringBuilder query = new StringBuilder(BdConstantes.SELECT);
 		query.append( "LOGIN.* " );
 		query.append( "FROM " + SVT_LOGIN + " LOGIN " );
-		query.append( "INNER JOIN SVC_CONTRATANTE SC ON LOGIN.ID_CONTRATANTE = SC.ID_CONTRATANTE " );
-		query.append( "WHERE SC.CVE_USUARIO = ");
+		query.append( "INNER JOIN SVT_USUARIOS USR ON LOGIN.ID_USUARIO = USR.ID_USUARIO " );
+		query.append( "WHERE USR.CVE_USUARIO = ");
 		query.append( "'" + cveContratante + "' ");
 		query.append( BdConstantes.LIMIT );
 		
 		return query.toString();
 	}
 	
-	public List<String> actContrasenia( String idLogin, String idContratante, String contrasenia ) {
+	public List<String> actContrasenia( String idLogin, String idUsuario, String contrasenia ) {
 		
 		List<String> lista = new ArrayList<>();
 		StringBuilder query = new StringBuilder(BdConstantes.UPDATE);
-		query.append( "SVC_CONTRATANTE " );
+		query.append( "SVT_USUARIOS " );
 		query.append( "SET `CVE_CONTRASENIA` = '"+ contrasenia +"', " );
-		query.append( "`FEC_ACTUALIZACION` = CURRENT_DATE() " );
-		//query.append( "`ID_USUARIO_MODIFICA` = '"+ idContratante +"' " );
-		query.append( "WHERE (`ID_CONTRATANTE` = '"+ idContratante +"') " );
+		query.append( "`FEC_ACTUALIZACION` = CURRENT_DATE() ," );
+		query.append( "`ID_USUARIO_MODIFICA` = '"+ idUsuario +"' " );
+		query.append( "WHERE (`ID_USUARIO` = '"+ idUsuario +"') " );
 		
 		lista.add( query.toString() );
 		

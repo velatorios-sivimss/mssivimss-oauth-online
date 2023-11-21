@@ -28,10 +28,13 @@ public class BdConstantes {
 	public static final String TIP_PARAMETRO= "TIP_PARAMETRO";
 	
 	public static final String REF_CORREO = "REF_CORREO"; 
+	public static final String ID_PERSONA = "ID_PERSONA"; 
 	public static final String CVE_CONTRASENIA = "CVE_CONTRASENIA"; 
 	public static final String CVE_MATRICULA = "CVE_MATRICULA"; 
 	public static final String ID_ESTADO = "ID_ESTADO";
 	public static final String FEC_ALTA = "FEC_ALTA";
+	public static final String ID_USUARIO_ALTA = "ID_USUARIO_ALTA";
+	public static final String IND_ACTIVO = "IND_ACTIVO";
 	public static final String CURRENT_DATE = "CURRENT_DATE()";
 	public static final String MAX_CONTRATANTE = "SELECT MAX(ID_CONTRATANTE)+1 AS max FROM SVC_CONTRATANTE"; 
 	

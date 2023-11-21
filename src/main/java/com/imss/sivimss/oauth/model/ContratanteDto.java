@@ -14,6 +14,7 @@ import lombok.Setter;
 public class ContratanteDto {
 	
 	private Integer idContratante;
+	private Integer idUsuario;
 	private Integer idPersona;
 	private Integer idDomicilio;
 	private String matricula;

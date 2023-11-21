@@ -29,14 +29,14 @@ public class CuentaExtImpl  extends UtileriaService implements CuentaExtService{
 	private static final String FEC_CAMBIO_CONTRASENIA = "FEC_CAMBIO_CONTRASENIA";
 	
 	@Override
-	public Login obtenerLoginPorIdContratante(String idContratante) throws IOException {
+	public Login obtenerLoginPorIdContratante(String idUsuario) throws IOException {
 		
 		//AQUI SE ALMECENAN LOS DATOS DE LA CONSULTA [0] SVT_LOGIN
 		List<Map<String, Object>> datos;
 		LoginExtUtil loginUtil = new LoginExtUtil();
 		List<Login> lista;
 		//CONSULTA POR ID PARA OBTENER DEL LOGIN
-		datos = consultaGenericaPorQuery( loginUtil.buscarPorIdContratante(idContratante) );
+		datos = consultaGenericaPorQuery( loginUtil.buscarPorIdContratante(idUsuario) );
 		Map<String, Object> dato;
 		Login login;
 		
@@ -45,7 +45,7 @@ public class CuentaExtImpl  extends UtileriaService implements CuentaExtService{
 			logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
 					this.getClass().getPackage().toString(),"",CONSULTA+" "+ "No existen datos en BD, entonces se debe crear el  registro");
 			
-			dato = insertarDetalle( loginUtil.insertar(idContratante) , "SVT_LOGIN", "ID_LOGIN");
+			dato = insertarDetalle( loginUtil.insertar(idUsuario) , "SVT_LOGIN", "ID_LOGIN");
 			login = modelMapper.map(dato, Login.class);
 		}else {
 			lista = Arrays.asList(modelMapper.map(datos, Login[].class));
@@ -101,11 +101,11 @@ public class CuentaExtImpl  extends UtileriaService implements CuentaExtService{
 	}
 
 	@Override
-	public Boolean actualizarContra(String idLogin, String idContratante, String contraNueva) throws IOException {
+	public Boolean actualizarContra(String idLogin, String idUsuario, String contraNueva) throws IOException {
 		Boolean exito = false;
 		LoginExtUtil loginUtil = new LoginExtUtil();
 		
-		exito = actualizarMultiple( loginUtil.actContrasenia(idLogin, idContratante, contraNueva) );
+		exito = actualizarMultiple( loginUtil.actContrasenia(idLogin, idUsuario, contraNueva) );
 		
 		return exito;
 	}
