@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imss.sivimss.oauth.beans.Contratante;
 import com.imss.sivimss.oauth.exception.BadRequestException;
 import com.imss.sivimss.oauth.model.Login;
-import com.imss.sivimss.oauth.model.request.CorreoRequest;
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
 import com.imss.sivimss.oauth.service.ContraseniaExtService;
 import com.imss.sivimss.oauth.service.ContratanteService;
 import com.imss.sivimss.oauth.service.CuentaExtService;
 import com.imss.sivimss.oauth.service.OauthExtService;
-import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.BdConstantes;
 import com.imss.sivimss.oauth.util.Database;
 import com.imss.sivimss.oauth.util.EstatusVigenciaEnum;
@@ -44,8 +41,11 @@ import lombok.extern.slf4j.Slf4j;
 public class OauthExtServiceImpl extends UtileriaService implements OauthExtService {
 	
 	
-	@Value("${endpoints.envio-correo}")
-	private String urlEnvioCorreo;
+	
+	//@Value("${endpoints.envio-correo}")
+	//private String urlEnvioCorreo;
+	@Autowired
+	GeneraCredencialesUtil generaCredenciales;
 	
 	@Autowired
 	private ContratanteService contratanteService;
@@ -140,6 +140,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapa.put("cveMatricula", usuario.getClaveMatricula());
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdUsuario());
+		log.info("idUsuario "+usuario.getIdUsuario());
 		mapa.put("idContratante", usuario.getIdContratante());
 		mapa.put("idPersona", usuario.getIdPersona());
 		
@@ -162,40 +163,37 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		return resp;
 		
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public Response<Object> registrarContratante(PersonaRequest contratanteR) throws IOException {
 		Response <Object>resp = new Response<>();
-		GeneraCredencialesUtil generaCredenciales = new GeneraCredencialesUtil();  
+	//	GeneraCredencialesUtil generaCredenciales = new GeneraCredencialesUtil();  
 		Contratante contratante = new Contratante();
-		Integer id = 0;
+		Integer idContratante = 0;
 		Connection connection = database.getConnection();
 		
 		try {
 			
 			statement = connection.createStatement();
 			connection.setAutoCommit(false);
-			String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
-			List<Map<String, Object>> mapping;
+		/*	List<Map<String, Object>> mapping;
 			String query = contratante.cuentaUsuarios();
 			List<Map<String, Object>> datos = consultaGenericaPorQuery( query );
 			mapping = Arrays.asList(modelMapper.map(datos, HashMap[].class));
-			Integer numberUser = Integer.parseInt(mapping.get(0).get("max").toString());
-			String user = generaCredenciales.obtenerUser(numberUser,contratanteR.getNombre(), contratanteR.getPaterno());
+			Integer numberUser = Integer.parseInt(mapping.get(0).get("max").toString()); */
 			statement.executeUpdate(contratante.insertarPersona(contratanteR),
 						Statement.RETURN_GENERATED_KEYS);
 			 rs = statement.getGeneratedKeys();
 					  if (rs.next()) {
 							contratanteR.getContratante().setIdPersona(rs.getInt(1));
 					  }
-					  String hash = passwordEncoder.encode(contrasenia); 
+					/*  String hash = passwordEncoder.encode(contrasenia); 
 					  statement.executeUpdate(contratante.insertarUsuario(contratanteR.getContratante().getIdPersona(), hash, user),
 								Statement.RETURN_GENERATED_KEYS);
 					 rs = statement.getGeneratedKeys();
 							  if (rs.next()) {
 									contratanteR.getContratante().setIdUsuario(rs.getInt(1));
-							  }
+							  } */
 				statement.executeUpdate(
 						contratante.insertarDomicilio(contratanteR.getDomicilio(), contratanteR.getContratante().getIdUsuario()),
 						Statement.RETURN_GENERATED_KEYS);
@@ -207,17 +205,15 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
-					id= rs.getInt(1);
-					log.info(id.toString());  
+					idContratante= rs.getInt(1);
+					log.info(idContratante.toString());  
 				}
-			
-				String credenciales = "<b>Nombre completo del Usuario:</b> "+contratanteR.getNombre()+" "+contratanteR.getPaterno()+" "+contratanteR.getMaterno()+"<br> <b>Clave de usuario: </b>"+user +"<br> <b>Contraseña: </b>"+contrasenia;
-				CorreoRequest correo = new CorreoRequest(user, credenciales, contratanteR.getCorreo(), AppConstantes.USR_CONTRASENIA);
-					//Hacemos el consumo para enviar el codigo por correo
-				  resp = providerRestTemplate.consumirServicio(correo, urlEnvioCorreo);
+				
+				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
+				String user = generaCredenciales.insertarUser(idContratante,contratanteR.getNombre(), contratanteR.getPaterno(), contrasenia, contratanteR.getContratante().getIdPersona(), statement);
+				resp = generaCredenciales.enviarCorreo(user, contratanteR.getCorreo(), contratanteR.getNombre(), contratanteR.getPaterno(), contratanteR.getMaterno(), contrasenia);
 					connection.commit();
 		}catch (Exception e) {
-			
 			throw new IOException("Fallo al ejecutar la query" + e.getMessage());
 		
 		}finally {
@@ -242,7 +238,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 					null );
 		} else {
 			resp = new Response<>(false, HttpStatus.OK.value(), "OK",
-					id );
+					idContratante );
 		}
 		return resp;
 	}
