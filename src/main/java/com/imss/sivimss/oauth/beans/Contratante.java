@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+
 import com.imss.sivimss.oauth.model.ContratanteDto;
 import com.imss.sivimss.oauth.model.DomicilioDto;
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
@@ -150,18 +151,16 @@ public class Contratante {
 	}
 
 
-	/*public String insertarUsuario(Integer idPersona, String contrasenia, String user) {
-		final QueryHelper q = new QueryHelper("INSERT INTO SVT_USUARIOS");
-		q.agregarParametroValues(BdConstantes.ID_PERSONA, idPersona.toString());
-		q.agregarParametroValues("ID_OFICINA", "3");
-		q.agregarParametroValues("ID_ROL", "150");
-		q.agregarParametroValues("IND_ACTIVO", "1");
-		q.agregarParametroValues(BdConstantes.CVE_CONTRASENIA, "'"+contrasenia+"'");
-		q.agregarParametroValues(BdConstantes.CVE_USUARIO, "'"+user+"'");
-		q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
-		q.agregarParametroValues("IND_CONTRATANTE", "1");
-		log.info("usuario: "+q.obtenerQueryInsertar());
-		return q.obtenerQueryInsertar();
-	}*/
+	public String consultaPlanSFPA(Integer idPlanSfpa) {
+		log.info(" INICIO - consultaPlanSFPA");
+		StringBuilder queryUtil = new StringBuilder();
+		queryUtil.append(" SELECT  SPSFPA.ID_TITULAR as idTitular, SP.ID_PERSONA AS idPersona, IFNULL(SP.NOM_PERSONA, '') AS nomPersona, ")
+		.append(" IFNULL(SP.NOM_PRIMER_APELLIDO, '') AS nomApellidoPaterno, IFNULL(SP.NOM_SEGUNDO_APELLIDO, '')AS nomApellidoMaterno, ")
+		.append(" IFNULL(SP.REF_CORREO , '')AS correo FROM SVT_PLAN_SFPA SPSFPA INNER JOIN SVC_CONTRATANTE SC ON ")
+		.append(" SC.ID_CONTRATANTE = SPSFPA.ID_TITULAR INNER JOIN SVC_PERSONA SP ON SP.ID_PERSONA = SC.ID_PERSONA ")
+		.append(" WHERE SPSFPA.ID_PLAN_SFPA = ").append(idPlanSfpa);
+		log.info(" TERMINO - consultaPlanSFPA"+ queryUtil.toString() );
+		return queryUtil.toString();
+	}
 
 }
