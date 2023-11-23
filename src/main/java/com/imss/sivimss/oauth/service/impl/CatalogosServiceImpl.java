@@ -1,8 +1,6 @@
 package com.imss.sivimss.oauth.service.impl;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.imss.sivimss.oauth.beans.Contratante;
 import com.imss.sivimss.oauth.model.request.RenapoRequest;
 import com.imss.sivimss.oauth.service.CatalogosService;
 import com.imss.sivimss.oauth.util.BdConstantes;
@@ -29,7 +26,6 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 	  @Value("${endpoints.renapo}")
 	    private String urlRenapo;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Response<Object> consultaRfcCurp(String curp, String rfc) throws IOException {
 		CatalogosUtil catalogosUtil = new CatalogosUtil();
@@ -56,9 +52,6 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 		}
 		return	new Response<>(true, HttpStatus.OK.value(),"USUARIO REGISTRADO",
 					null);
-		//lista = Arrays.asList(modelMapper.map(datos, HashMap[].class));
-		//contratante =  new Contratante(lista.get(0));
-		//return contratante;
 	}
 
 	@Override
