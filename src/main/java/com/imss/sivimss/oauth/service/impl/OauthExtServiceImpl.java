@@ -41,10 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class OauthExtServiceImpl extends UtileriaService implements OauthExtService {
 	
-	
-	
-	//@Value("${endpoints.envio-correo}")
-	//private String urlEnvioCorreo;
 	@Autowired
 	GeneraCredencialesUtil generaCredenciales;
 	

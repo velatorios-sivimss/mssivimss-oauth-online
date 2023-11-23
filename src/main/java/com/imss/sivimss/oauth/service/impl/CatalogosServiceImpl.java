@@ -37,7 +37,8 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 		String query = catalogosUtil.validarRfcCurp(curp, rfc);
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+ query);
 		List<Map<String, Object>> datos = consultaGenericaPorQuery( query );
-		if(curp!=null && (datos==null||datos.isEmpty())) {
+		if(datos==null||datos.isEmpty()) {
+			if(curp!=null) {
 			Map<String, Object> renapo;
 			 renapo = providerRestTemplate.consumirServicioGet(urlRenapo + curp);
 			if(renapo.get("statusOper").toString().equals("NO EXITOSO")) {
@@ -48,10 +49,10 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 			      return new Response<>(false, HttpStatus.OK.value(),"EXITO",
 					renapoRequest);
 			}
-			 
-		}else if(rfc!=null && datos.isEmpty()) {
-			return	new Response<>(true, HttpStatus.OK.value(),"EXITO",
-					datos);
+			}else {
+				return	new Response<>(true, HttpStatus.OK.value(),"EXITO",
+						datos);
+		}
 		}
 		return	new Response<>(true, HttpStatus.OK.value(),"USUARIO REGISTRADO",
 					null);

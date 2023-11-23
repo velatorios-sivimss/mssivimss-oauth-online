@@ -29,7 +29,7 @@ public class RenapoRequest {
 		this.apellido2 = renapo.get("apellido2").toString();
 		this.nombre = renapo.get("nombre").toString();
 		this.sexo = renapo.get("sexo").toString();
-		this.fechNac = renapo.get("fechNac").toString();
+		this.fechNac = renapo.get("fechNac").toString().replace("/", "-");
 	}
 	
 	
