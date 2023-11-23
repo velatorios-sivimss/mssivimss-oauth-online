@@ -46,7 +46,9 @@ public class Contratante {
 	
 	public Contratante(Map<String, Object> datos) {
 		this.idContratante = datos.get("ID_CONTRATANTE").toString();
-		this.idUsuario = datos.get("ID_USUARIO").toString();
+        if(datos.get("ID_USUARIO")!=null) {
+        	this.idUsuario = datos.get("ID_USUARIO").toString();
+        }
 		this.idPersona = datos.get(BdConstantes.ID_PERSONA).toString();
 		this.nombre = datos.get("NOM_PERSONA").toString();
 		this.paterno = datos.get("NOM_PRIMER_APELLIDO").toString();

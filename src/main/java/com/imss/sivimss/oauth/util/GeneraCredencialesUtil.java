@@ -2,7 +2,6 @@ package com.imss.sivimss.oauth.util;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.imss.sivimss.oauth.beans.Contratante;
 import com.imss.sivimss.oauth.model.request.CorreoRequest;
 
 import lombok.extern.slf4j.Slf4j;

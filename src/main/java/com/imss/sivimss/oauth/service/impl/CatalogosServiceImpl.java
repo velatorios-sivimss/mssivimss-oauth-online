@@ -8,13 +8,17 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.imss.sivimss.oauth.beans.Contratante;
+import com.imss.sivimss.oauth.model.request.RenapoRequest;
 import com.imss.sivimss.oauth.service.CatalogosService;
 import com.imss.sivimss.oauth.util.BdConstantes;
 import com.imss.sivimss.oauth.util.CatalogosUtil;
 import com.imss.sivimss.oauth.util.LogUtil;
+import com.imss.sivimss.oauth.util.Response;
 
 @Service
 public class CatalogosServiceImpl extends UtileriaService implements CatalogosService {
@@ -22,22 +26,38 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 	@Autowired
 	private LogUtil logUtil;
 	
+	  @Value("${endpoints.renapo}")
+	    private String urlRenapo;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object consultaRfcCurp(String curp, String rfc) throws IOException {
+	public Response<Object> consultaRfcCurp(String curp, String rfc) throws IOException {
 		CatalogosUtil catalogosUtil = new CatalogosUtil();
-		List<Map<String, Object>> lista;
-		Contratante contratante;
+		 RenapoRequest renapoRequest;
 		String query = catalogosUtil.validarRfcCurp(curp, rfc);
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+ query);
 		List<Map<String, Object>> datos = consultaGenericaPorQuery( query );
-		if(datos==null||datos.isEmpty()) {
-			return datos;
+		if(curp!=null && (datos==null||datos.isEmpty())) {
+			Map<String, Object> renapo;
+			 renapo = providerRestTemplate.consumirServicioGet(urlRenapo + curp);
+			if(renapo.get("statusOper").toString().equals("NO EXITOSO")) {
+				return	new Response<>(true, HttpStatus.OK.value(),"NO EXISTE CURP",
+						null);
+			}else {
+			renapoRequest =  new RenapoRequest(renapo);
+			      return new Response<>(false, HttpStatus.OK.value(),"EXITO",
+					renapoRequest);
+			}
+			 
+		}else if(rfc!=null && datos.isEmpty()) {
+			return	new Response<>(true, HttpStatus.OK.value(),"EXITO",
+					datos);
 		}
-		lista = Arrays.asList(modelMapper.map(datos, HashMap[].class));
-		contratante =  new Contratante(lista.get(0));
-		return contratante;
+		return	new Response<>(true, HttpStatus.OK.value(),"USUARIO REGISTRADO",
+					null);
+		//lista = Arrays.asList(modelMapper.map(datos, HashMap[].class));
+		//contratante =  new Contratante(lista.get(0));
+		//return contratante;
 	}
 
 	@Override
