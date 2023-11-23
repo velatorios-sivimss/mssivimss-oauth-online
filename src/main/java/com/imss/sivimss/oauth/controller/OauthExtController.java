@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
+import com.imss.sivimss.oauth.model.request.PlanSFPARequest;
 import com.imss.sivimss.oauth.service.OauthExtService;
 import com.imss.sivimss.oauth.util.AppConstantes;
 import com.imss.sivimss.oauth.util.LogUtil;
@@ -49,6 +50,15 @@ public class OauthExtController {
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",CONSULTA+" "+ contratanteR);
 		
 		return oauthService.registrarContratante(contratanteR);
+      
+	}
+	
+	@PostMapping("registrar/usuario")
+	public Response<Object> registrarUsuario(@RequestBody PlanSFPARequest planSFPARequest) throws Exception {
+		
+		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",AppConstantes.ALTA+" "+ planSFPARequest);
+		
+		return oauthService.registrarUsuario(planSFPARequest);
       
 	}
 
