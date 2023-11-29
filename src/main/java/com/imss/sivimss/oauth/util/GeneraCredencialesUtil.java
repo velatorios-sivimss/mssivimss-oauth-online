@@ -71,7 +71,7 @@ public class GeneraCredencialesUtil{
         SimpleDateFormat fecActual = new SimpleDateFormat("MM");
 		String numMes = fecActual.format(new Date());
 		
-		return nombre.toUpperCase()+randomChar+"."+pLetraS.toUpperCase()+sLetra+numMes;
+		return nombre+randomChar+"."+pLetraS.toUpperCase()+sLetra+numMes;
 	} 
 	
 	public String insertarUsuario(Integer idPersona, String contrasenia, String user) {
@@ -81,7 +81,7 @@ public class GeneraCredencialesUtil{
 		q.agregarParametroValues("ID_ROL", "150");
 		q.agregarParametroValues("IND_ACTIVO", "1");
 		q.agregarParametroValues("CVE_CONTRASENIA", "'"+contrasenia+"'");
-		q.agregarParametroValues("CVE_USUARIO", "'"+user+"'");
+		q.agregarParametroValues("CVE_USUARIO", "'"+user.toUpperCase()+"'");
 		q.agregarParametroValues("FEC_ALTA", BdConstantes.CURRENT_DATE);
 		q.agregarParametroValues("IND_CONTRATANTE", "1");
 		return q.obtenerQueryInsertar();
@@ -90,8 +90,9 @@ public class GeneraCredencialesUtil{
 	public Response<Object> enviarCorreo(String user, String correo, String nombre, String paterno, String materno,
 			String contrasenia) throws IOException {
 		log.info("envioCorreo "+urlEnvioCorreo);
-		String credenciales = "<b>Nombre completo del Usuario:</b> "+nombre+" "+paterno+" "+materno+"<br> <b>Clave de usuario: </b>"+user +"<br> <b>Contraseña: </b>"+contrasenia;
-		CorreoRequest correoR = new CorreoRequest(user, credenciales, correo, AppConstantes.USR_CONTRASENIA);
+		String nombreUser = nombre.toUpperCase()+" "+paterno.toUpperCase()+" "+materno.toUpperCase(); 
+		String credenciales = "<b>Nombre completo del Usuario:</b> "+nombreUser+"<br> <b>Clave de usuario: </b>"+user.toUpperCase() +"<br> <b>Contraseña: </b>"+contrasenia;
+		CorreoRequest correoR = new CorreoRequest(user.toUpperCase(), credenciales, correo, AppConstantes.USR_CONTRASENIA);
 			//Hacemos el consumo para enviar el codigo por correo
 		
 			Response <Object>response = providerRestTemplate.consumirServicio(correoR, urlEnvioCorreo);

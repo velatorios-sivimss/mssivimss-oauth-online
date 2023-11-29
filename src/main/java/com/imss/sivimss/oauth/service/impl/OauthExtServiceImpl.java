@@ -41,10 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class OauthExtServiceImpl extends UtileriaService implements OauthExtService {
 	
-	
-	
-	//@Value("${endpoints.envio-correo}")
-	//private String urlEnvioCorreo;
 	@Autowired
 	GeneraCredencialesUtil generaCredenciales;
 	
@@ -141,7 +137,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapa.put("cveMatricula", usuario.getClaveMatricula());
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdUsuario());
-		log.info("idUsuario "+usuario.getIdUsuario());
+		mapa.put("idRol", "150");
 		mapa.put("idContratante", usuario.getIdContratante());
 		mapa.put("idPersona", usuario.getIdPersona());
 		

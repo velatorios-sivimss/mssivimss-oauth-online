@@ -34,12 +34,14 @@ public class CatalogosController {
 		}else {
 			rfc = datos.get("rfc").toString();
 		}
-		 response = new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(),
-				catalogosService.consultaRfcCurp(curp, rfc) );
-		 if(response.getDatos().toString().equals("[]")) {
+		 response = catalogosService.consultaRfcCurp(curp, rfc);
+	/*	 if(response.getDatos().toString().equals("[]")) {
 			 response = new Response<>(false, HttpStatus.OK.value(),"45",
 						response.getDatos());
-		 }
+		 }else if(response.getMensaje().equals("USUARIO REGISTRADO")) {
+			 response = new Response<>(false, HttpStatus.OK.value(),"USUARIO REGISTRADO",
+						response.getDatos());
+		 } */
 		return response;
 
 	}

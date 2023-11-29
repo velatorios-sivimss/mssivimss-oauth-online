@@ -123,7 +123,8 @@ public class CatalogosUtil {
 	
 	public String validarRfcCurp(String curp, String rfc) {
 		
-		StringBuilder query = new StringBuilder("SELECT SP.NOM_PERSONA,"
+		StringBuilder query = new StringBuilder("SELECT SP.ID_PERSONA, "
+				+ "SP.NOM_PERSONA,"
 				+ " SP.NOM_PRIMER_APELLIDO,"
 				+ " SP.NOM_SEGUNDO_APELLIDO,"
 				+ " SP.CVE_RFC,"
