@@ -60,7 +60,7 @@ public class GeneraCredencialesUtil{
         }
       
         char randomChar = caracteres.charAt(randomInt);
-        char[] apellido= paterno.toCharArray();
+        char[] apellido= paterno.toLowerCase().toCharArray();
         
         char pLetra = apellido[0];//paterno 0
         String pLetraS = String.valueOf(pLetra); 
@@ -92,15 +92,10 @@ public class GeneraCredencialesUtil{
 		log.info("envioCorreo "+urlEnvioCorreo);
 		String nombreUser = nombre.toUpperCase()+" "+paterno.toUpperCase()+" "+materno.toUpperCase(); 
 		String credenciales = "<b>Nombre completo del Usuario:</b> "+nombreUser+"<br> <b>Clave de usuario: </b>"+user.toUpperCase() +"<br> <b>Contraseña: </b>"+contrasenia;
-		CorreoRequest correoR = new CorreoRequest(user.toUpperCase(), credenciales, correo, AppConstantes.USR_CONTRASENIA);
+		
+			CorreoRequest correoR = new CorreoRequest(user.toUpperCase(), credenciales, correo, AppConstantes.USR_CONTRASENIA);
 			//Hacemos el consumo para enviar el codigo por correo
-		
-			Response <Object>response = providerRestTemplate.consumirServicio(correoR, urlEnvioCorreo);
-		
-		if(response.getCodigo()!=200) {
-			return new Response<>(true, 200, "Error en el envio de correos", null);
-		}
-		  return response;
+			return providerRestTemplate.consumirServicio(correoR, urlEnvioCorreo);
 	}
 	
 	
