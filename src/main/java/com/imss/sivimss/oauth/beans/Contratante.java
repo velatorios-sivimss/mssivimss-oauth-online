@@ -43,6 +43,8 @@ public class Contratante {
 	private String curp;
 	private String claveUsuario;
 	private String activo;
+	private String idRol;
+	private String rol;
 	
 	
 	public Contratante(Map<String, Object> datos) {
@@ -72,6 +74,8 @@ public class Contratante {
 			this.claveUsuario = datos.get(BdConstantes.CVE_USUARIO).toString();
 		}
 		this.activo = datos.get(BdConstantes.IND_ACTIVO).toString();
+		this.idRol = datos.get("ID_ROL").toString();
+		this.rol = datos.get("DES_ROL").toString();
 	}
 	
 	
@@ -80,6 +84,7 @@ public class Contratante {
 		StringBuilder query = new StringBuilder(BdConstantes.SELECT_CONTRATANTE);
 		query.append( "INNER JOIN SVC_PERSONA PER ON SC.ID_PERSONA = PER.ID_PERSONA " );
 		query.append( "INNER JOIN SVT_USUARIOS USR ON PER.ID_PERSONA = USR.ID_PERSONA " );
+		query.append( "INNER JOIN SVC_ROL ROL ON USR.ID_ROL = ROL.ID_ROL " );
 		query.append( BdConstantes.WHERE );
 		query.append( BdConstantes.CVE_USUARIO + " = ");
 		query.append( "'" + user + "' " );

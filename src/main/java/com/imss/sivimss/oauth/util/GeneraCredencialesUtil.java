@@ -27,21 +27,7 @@ public class GeneraCredencialesUtil{
 	
 	@Value("${endpoints.envio-correo}")
 	private String urlEnvioCorreo;
-
-	public String insertarUser(Integer numberUser, String nombreCompleto, String paterno, String contrasenia, Integer idPersona, Statement statement) throws SQLException{
-		String hash = passwordEncoder.encode(contrasenia);
-		String[] obtieneNombre = nombreCompleto.split(" ");
-        String nombre = obtieneNombre[0];
-        char[] apellido= paterno.toCharArray();
-        char apM = apellido[0];
-        String inicialApellido = String.valueOf(apM);
-        String formatearCeros = String.format("%03d", numberUser);
-		String user = nombre+inicialApellido+formatearCeros;
-		 statement.executeUpdate(insertarUsuario(idPersona, hash, user),
-					Statement.RETURN_GENERATED_KEYS);
-		return user;
-	}
-
+	
 	public String generarContrasenia(String nombreCompleto, String paterno) {
 		SecureRandom random = new SecureRandom();
         String caracteres = "#$^+=!*()@%&";
@@ -73,8 +59,24 @@ public class GeneraCredencialesUtil{
 		
 		return nombre+randomChar+"."+pLetraS.toUpperCase()+sLetra+numMes;
 	} 
+
+	public String insertarUser(Integer numberUser, String nombreCompleto, String paterno, String contrasenia, Integer idPersona, Statement statement) throws SQLException{
+		String hash = passwordEncoder.encode(contrasenia);
+		String[] obtieneNombre = nombreCompleto.split(" ");
+        String nombre = obtieneNombre[0];
+        char[] apellido= paterno.toCharArray();
+        char apM = apellido[0];
+        String inicialApellido = String.valueOf(apM);
+        String formatearCeros = String.format("%03d", numberUser);
+		String user = nombre+inicialApellido+formatearCeros;
+		 statement.executeUpdate(queryUsuario(idPersona, hash, user),
+					Statement.RETURN_GENERATED_KEYS);
+		return user;
+	}
+
 	
-	public String insertarUsuario(Integer idPersona, String contrasenia, String user) {
+	
+	private String queryUsuario(Integer idPersona, String contrasenia, String user) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVT_USUARIOS");
 		q.agregarParametroValues("ID_PERSONA", idPersona.toString());
 		q.agregarParametroValues("ID_OFICINA", "3");
