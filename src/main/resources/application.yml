@@ -52,8 +52,8 @@ logging:
     org.hibernate: error
 
 endpoints:
-   envio-correo: ${msit_CORREO_REC_CON}
-   consulta-siap: ${msit_SIAP}/
+   envio-correo: ${msit_ENVIO_CORREO}
+   renapo: ${msit_RENAPO}
 jwt:
   secretkey: ${msit_SECRET_KEY_LOGIN}
   secretkey-flujo: ${msit_SECRET_KEY_FLUJO}
@@ -91,7 +91,7 @@ resilience4j.timelimiter:
       msflujo:
         timeout-duration: 3s
         
-formato_fecha: ${msit_FORMATO_FECHA}
+#formato_fecha: ${msit_FORMATO_FECHA}
 formato_fecha_hora: ${msit_FORMATO_FECHA_HORA}
 patron_formato_fecha_hora: ${msit_FORMATO_FECHA_HORA_PATRON}
 ruta-log: ${msit_RUTA_LOG}
