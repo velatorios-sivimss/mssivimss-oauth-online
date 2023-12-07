@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: mssivimss-oauth
+    name: mssivimss-oauth-online
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -95,5 +95,4 @@ formato_fecha: ${msit_FORMATO_FECHA}
 formato_fecha_hora: ${msit_FORMATO_FECHA_HORA}
 patron_formato_fecha_hora: ${msit_FORMATO_FECHA_HORA_PATRON}
 ruta-log: ${msit_RUTA_LOG}
-
 tiempo-vida: ${msit_TIEMPO_VIDA}
