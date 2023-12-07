@@ -139,7 +139,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdUsuario());
 		mapa.put("idRol", usuario.getIdRol());
-		mapa.put("rol", usuario.getIdRol());
+		mapa.put("rol", usuario.getRol());
 		mapa.put("idContratante", usuario.getIdContratante());
 		mapa.put("idPersona", usuario.getIdPersona());
 		
