@@ -2,7 +2,6 @@ package com.imss.sivimss.oauth.service.impl;
 
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -139,7 +138,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdUsuario());
 		mapa.put("idRol", usuario.getIdRol());
-		mapa.put("rol", usuario.getRol());
+		mapa.put("desRol", usuario.getRol());
 		mapa.put("idContratante", usuario.getIdContratante());
 		mapa.put("idPersona", usuario.getIdPersona());
 		
