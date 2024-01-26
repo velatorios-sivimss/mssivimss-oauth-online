@@ -159,7 +159,7 @@ public class Contratante {
 	}
 
 
-	public String consultaPlanSFPA(Integer idPlanSfpa) {
+	/*public String consultaPlanSFPA(Integer idPlanSfpa) {
 		log.info(" INICIO - consultaPlanSFPA");
 		StringBuilder queryUtil = new StringBuilder();
 		queryUtil.append(" SELECT  SPSFPA.ID_TITULAR as idTitular, SP.ID_PERSONA AS idPersona, IFNULL(SP.NOM_PERSONA, '') AS nomPersona, ")
@@ -169,6 +169,6 @@ public class Contratante {
 		.append(" WHERE SPSFPA.ID_PLAN_SFPA = ").append(idPlanSfpa);
 		log.info(" TERMINO - consultaPlanSFPA"+ queryUtil.toString() );
 		return queryUtil.toString();
-	}
+	} */
 
 }
