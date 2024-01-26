@@ -137,7 +137,8 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		mapa.put("cveMatricula", usuario.getClaveMatricula());
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdUsuario());
-		mapa.put("idRol", "150");
+		mapa.put("idRol", usuario.getIdRol());
+		mapa.put("desRol", usuario.getRol());
 		mapa.put("idContratante", usuario.getIdContratante());
 		mapa.put("idPersona", usuario.getIdPersona());
 		
@@ -165,13 +166,21 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	public Response<Object> registrarContratante(PersonaRequest contratanteR) throws IOException {
 		Response <Object>resp = new Response<>();
 		Contratante contratante = new Contratante();
-		Integer idContratante = 0;
+		Integer idContratante = contratanteR.getContratante().getIdContratante();
+		
+		if(contratanteR.getIdUsuario()!=null) {
+			return new Response<>(true, HttpStatus.OK.value(), "197",
+					null );
+		}
 		Connection connection = database.getConnection();
 		
 		try {
 			
 			statement = connection.createStatement();
 			connection.setAutoCommit(false);
+			if(contratanteR.getContratante().getIdContratante()==null) {
+				
+			
 			statement.executeUpdate(contratante.insertarPersona(contratanteR),
 						Statement.RETURN_GENERATED_KEYS);
 			 rs = statement.getGeneratedKeys();
@@ -192,7 +201,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 					idContratante= rs.getInt(1);
 					log.info(idContratante.toString());  
 				}
-				
+			}
 				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
 				String user = generaCredenciales.insertarUser(idContratante,contratanteR.getNombre(), contratanteR.getPaterno(), contrasenia, contratanteR.getContratante().getIdPersona(), statement);
 				resp = generaCredenciales.enviarCorreo(user, contratanteR.getCorreo(), contratanteR.getNombre(), contratanteR.getPaterno(), contratanteR.getMaterno(), contrasenia);
@@ -227,7 +236,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		return resp;
 	}
 
-	@Override
+	/*@Override
 	public Response<Object> registrarUsuario(PlanSFPARequest planSFPARequest) throws IOException {
 		Response <Object>resp = new Response<>();
 		PersonaRequest contratanteR = new PersonaRequest();
@@ -245,13 +254,14 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 				contratanteR.setPaterno(rs.getString(4));
 				contratanteR.setMaterno(rs.getString(5));
 				contratanteR.setCorreo(rs.getString(6));
+				
 				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
 				String user = generaCredenciales.insertarUser(contratanteR.getContratante().getIdContratante(),contratanteR.getNombre(), contratanteR.getPaterno(), contrasenia, contratanteR.getContratante().getIdPersona(), statement);
 				resp = generaCredenciales.enviarCorreo(user, contratanteR.getCorreo(), contratanteR.getNombre(), contratanteR.getPaterno(), contratanteR.getMaterno(), contrasenia);
 			}
 			connection.commit();
 		}catch (Exception e) {
-			throw new IOException("Fallo al ejecutar la query" + e.getMessage());
+			throw new IOException("Fallo el servicio: " + e.getMessage());
 		
 		}finally {
 			
@@ -263,7 +273,6 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 				if(connection!=null) {
 					connection.close();
 				}
-				
 			} catch (SQLException ex) {
 				
 				log.info(ex.getMessage());
@@ -278,7 +287,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 					contratanteR.getContratante().getIdContratante() );
 		}
 		return resp;
-	}
+	}*/
 }
 	
 

@@ -123,24 +123,44 @@ public class CatalogosUtil {
 	
 	public String validarRfcCurp(String curp, String rfc) {
 		
-		StringBuilder query = new StringBuilder("SELECT SP.ID_PERSONA, "
-				+ "SP.NOM_PERSONA,"
-				+ " SP.NOM_PRIMER_APELLIDO,"
-				+ " SP.NOM_SEGUNDO_APELLIDO,"
-				+ " SP.CVE_RFC,"
-				+ " SV.ID_CONTRATANTE,"
-				+ " SP.ID_PAIS,"
-				+ " SP.CVE_CURP,"
-				+ " SV.IND_ACTIVO"
+		StringBuilder query = new StringBuilder("SELECT SP.ID_PERSONA idPersona, "
+				+ "SP.NOM_PERSONA nomPersona,"
+				+ " SP.NOM_PRIMER_APELLIDO materno,"
+				+ " SP.NOM_SEGUNDO_APELLIDO paterno,"
+				+ " SP.CVE_RFC rfc,"
+				+ " SV.ID_CONTRATANTE idContratante,"
+				+ " SP.CVE_CURP curp,"
+				+ " SV.IND_ACTIVO estatus,"
+				+ "SP.CVE_NSS nss,"
+				+ "DATE_FORMAT(SP.FEC_NAC, '%d/%m/%Y') fecNacimiento, "
+				+ "IF(SP.NUM_SEXO=1, 'MUJER', 'HOMBRE') sexo, " 
+				+ "IF(SP.ID_PAIS=119, 'MEXICANA', 'EXTRANJERA') nacionalidad, "
+				+ "PA.DES_PAIS pais, "
+				+ "EDO.DES_ESTADO lugarNac, "
+				+ "SP.REF_TELEFONO tel, "
+				+ "SP.REF_CORREO correo, "
+				+ "DOM.REF_CALLE calle, "
+				+ "DOM.NUM_EXTERIOR numExterior, "
+				+ "DOM.NUM_INTERIOR numInterior, "
+				+ "DOM.REF_CP cp, "
+				+ "DOM.REF_COLONIA colonia, "
+				+ "DOM.REF_MUNICIPIO municipio, "
+				+ "DOM.REF_ESTADO estado, "
+				+ "USR.ID_USUARIO idUsuario, "
+				+ "USR.CVE_USUARIO usr"		
 				+ " FROM ");
 		query.append( "SVC_CONTRATANTE SV " );
 		query.append( "INNER JOIN SVC_PERSONA SP ON SV.ID_PERSONA = SP.ID_PERSONA " );
+		query.append( "INNER JOIN SVC_PAIS PA ON SP.ID_PAIS = PA.ID_PAIS " );
+		query.append( "LEFT JOIN SVC_ESTADO EDO ON SP.ID_ESTADO = EDO.ID_ESTADO " );
+		query.append( "INNER JOIN SVT_DOMICILIO DOM ON SV.ID_DOMICILIO = DOM.ID_DOMICILIO " );
+		query.append( "LEFT JOIN SVT_USUARIOS USR ON USR.ID_PERSONA = SP.ID_PERSONA " );
 		if(curp!=null) {
-			query.append( " AND SP.CVE_CURP = '"+curp+"'" );
+			query.append( " WHERE SP.CVE_CURP = '"+curp+"'" );
 		}else{
-			query.append( " AND SP.CVE_RFC =  '"+rfc+"'" );
+			query.append( " WHERE SP.CVE_RFC =  '"+rfc+"'" );
 		}
-		
+		query.append(" LIMIT 1");
 		return query.toString();
 	}
 }

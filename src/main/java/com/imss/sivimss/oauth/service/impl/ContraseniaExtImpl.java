@@ -141,13 +141,16 @@ public class ContraseniaExtImpl extends UtileriaService implements ContraseniaEx
 		}
 		
 		//Guardamos el codigo en la BD y Guardamos el historial
-		List<String> querys = new ArrayList<>();
+	List<String> querys = new ArrayList<>();
+		
 		//update en SVT_LOGIN
-		querys.add( loginUtil.actCodSeg(login.getIdLogin(), codigo) );
+		//String query= loginUtil.actCodSeg(login.getIdLogin(), codigo);
+			querys.add( loginUtil.actCodSeg(login.getIdLogin(), codigo) );
 		//INSERT EN SVT_HIST_CODIGO_SEGURIDAD
 		querys.add( loginUtil.historial(login.getIdLogin(), codigo) );
 		
 		Boolean exito = actualizarMultiple( querys );
+	//	Boolean exito = actualizaGenericoPorQuery(query);
 		
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),
 				this.getClass().getPackage().toString(),"",CONSULTA+" "+ exito.toString());

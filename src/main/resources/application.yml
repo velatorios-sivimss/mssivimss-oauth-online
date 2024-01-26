@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: mssivimss-oauth
+    name: mssivimss-oauth-online
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -13,19 +13,19 @@ spring:
   datasource:
     platform: mariadb
     driverClassName: org.mariadb.jdbc.Driver
-    url: ${msit_CONNECTION_DB}
-    username: ${msit_USERNAME_DB}
-    password: ${msit_PASSWORD_DB}
+    url:  jdbc:mysql://10.102.44.18:3306/SIVIBDDS  #jdbc:mysql://10.102.44.18:3306/SIVIBDDS #${msit_CONNECTION_DB} jdbc:mariadb://localhost:3306/SIVIBDDS #
+    username: SIVI_USER #SIVI_USER #${msit_USERNAME_DB}
+    password: 51V1_US3R #Maria2023 #51V1_US3R #${msit_PASSWORD_DB}
     timeBetweenEvictionRunsMillis: 1000
     testWhileIdle: true
     validationQuery: SELECT 1
     hikari:
-      max-lifetime:  ${msit_LIFE_TIME}
-      idle-timeout:  ${msit_TIME_OUT}
-      connection-timeout: ${msit_CONNECTION_TIMEOUT}
+      #max-lifetime:  ${msit_LIFE_TIME}
+      #idle-timeout:  ${msit_TIME_OUT}
+      #connection-timeout: ${msit_CONNECTION_TIMEOUT}
       auto-commit: false
-      maximum-pool-size:  ${msit_CONNECTION_POOL}
-      minimum-idle:  ${msit_CONNECTION_IDLE}
+      #maximum-pool-size:  ${msit_CONNECTION_POOL}
+      #minimum-idle:  ${msit_CONNECTION_IDLE}
 
   main:
     allow-circular-references: true
@@ -52,13 +52,14 @@ logging:
     org.hibernate: error
 
 endpoints:
-   envio-correo: ${msit_CORREO_REC_CON}
-   consulta-siap: ${msit_SIAP}/
+   envio-correo: "https://sivimss-ds.apps.ocp.imss.gob.mx/mssivimss-ser-externos/v1/catalogos/externos/enviar/correo/recuperacontrasenia" #"http://serviciosdigitalesinterno-stage.imss.gob.mx/serviciosDigitales-rest/v1/util/correoElectronico/enviar"
+   consulta-siap: "http://serviciosdigitalesinterno-stage.imss.gob.mx/serviciosDigitales-rest/v1/externos/siap/matricula/"
+   renapo: "http://serviciosdigitalesinterno-stage.imss.gob.mx/serviciosDigitales-rest/v1/externos/renapo/curp/"
 jwt:
-  secretkey: ${msit_SECRET_KEY_LOGIN}
-  secretkey-flujo: ${msit_SECRET_KEY_FLUJO}
-  secretkey-dominios: ${msit_SECRET_KEY_DOMINIO}
-  expiration-milliseconds: ${msit_SECRET_KEY_EXPIRATION}
+  secretkey: funcionamuybienlogin
+  secretkey-flujo: funcionamuybien
+  secretkey-dominios: funcionamuybiendominio
+  expiration-milliseconds: '360'
   
 management:
       endpoints:
@@ -67,33 +68,33 @@ management:
                 include:
                     health,info,metrics
 
+
 resilience4j.circuitbreaker:
-    circuitBreakerAspectOrder: 1
-    instances:
-      msflujo:
-        automaticTransitionFromOpenToHalfOpenEnabled: 'true'
-        failureRateThreshold: ${msit_HILOS}
-        slidingWindowType: COUNT_BASED
-        event-consumer-buffer-size: '10'
-        registerHealthIndicator: 'true'
-        waitDurationInOpenState: ${msit_TIEMPO_DURACION}
-        permittedNumberOfCallsInHalfOpenState: ${msit_NUMERO_INTENTOS}
-        slidingWindowSize: '5'
+  circuitBreakerAspectOrder: 1
+  instances:
+    msflujo:
+      automaticTransitionFromOpenToHalfOpenEnabled: "true"
+      failureRateThreshold: '50'
+      slidingWindowType: COUNT_BASED
+      event-consumer-buffer-size: '10'
+      registerHealthIndicator: 'true'
+      waitDurationInOpenState: 5s
+      permittedNumberOfCallsInHalfOpenState: '3'
+      slidingWindowSize: '5'
 resilience4j.retry:
     retryAspectOrder: 2
     instances:
         msflujo:
-           maxAttempts: ${msit_NUMERO_INTENTOS}
-           waitDuration: ${msit_TIEMPO_DURACION}
+           maxAttempts: 3 #${msit_NUMERO_INTENTOS}
+           waitDuration: 5s #${msit_TIEMPO_DURACION}
 resilience4j.timelimiter:
     timeLimiterAspectOrder: 3
     instances:
       msflujo:
         timeout-duration: 3s
         
-formato_fecha: ${msit_FORMATO_FECHA}
-formato_fecha_hora: ${msit_FORMATO_FECHA_HORA}
-patron_formato_fecha_hora: ${msit_FORMATO_FECHA_HORA_PATRON}
-ruta-log: ${msit_RUTA_LOG}
-
-tiempo-vida: ${msit_TIEMPO_VIDA}
+#formato_fecha: '%d/%m/%Y'
+formato_fecha_hora: '%d/%m/%Y %H:%i:%s'
+patron_formato_fecha_hora: 'dd/MM/yyyy HH:mm:ss'
+ruta-log: '/sivimss-files/log/'
+tiempo-vida: 10

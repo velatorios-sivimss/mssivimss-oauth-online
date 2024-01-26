@@ -51,7 +51,7 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 		}
 		}
 		return	new Response<>(true, HttpStatus.OK.value(),"USUARIO REGISTRADO",
-					null);
+					datos);
 	}
 
 	@Override
