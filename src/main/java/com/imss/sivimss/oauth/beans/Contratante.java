@@ -103,7 +103,7 @@ public class Contratante {
 		q.agregarParametroValues("CVE_RFC", setValor(contratanteR.getRfc()));
 		q.agregarParametroValues("NUM_SEXO", contratanteR.getNumSexo().toString());	
 		q.agregarParametroValues("REF_OTRO_SEXO", setValor(contratanteR.getOtroSexo()));
-		q.agregarParametroValues("TIP_PERSONA", "CONTRATANTE");
+		q.agregarParametroValues("TIP_PERSONA", "'CONTRATANTE'");
 			Date dateF = new SimpleDateFormat("dd-MM-yyyy").parse(contratanteR.getFecNacimiento());
 	        DateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "MX"));
 		q.agregarParametroValues("FEC_NAC", "'"+fechaFormat.format(dateF)+"'");
