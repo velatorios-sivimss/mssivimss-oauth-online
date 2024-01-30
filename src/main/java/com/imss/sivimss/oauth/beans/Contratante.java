@@ -65,7 +65,9 @@ public class Contratante {
 		if( datos.get(BdConstantes.CVE_MATRICULA) != null ) {
 			this.claveMatricula = datos.get(BdConstantes.CVE_MATRICULA).toString();
 		}
-			this.idPais = datos.get("ID_PAIS").toString();
+		if( datos.get(BdConstantes.ID_PAIS) != null ) {
+			this.idPais = datos.get(BdConstantes.ID_PAIS).toString();
+		}
 		if( datos.get(BdConstantes.ID_ESTADO) != null ) {
 			this.idEstado = datos.get(BdConstantes.ID_ESTADO).toString();
 		}
