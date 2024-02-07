@@ -12,6 +12,8 @@ public interface CatalogosService {
 	public Object consultaPais() throws IOException;
 
 	public Object consultaEstado() throws IOException;
+
+	public Object consultaCP(String cp) throws IOException;
 	
 }
 
