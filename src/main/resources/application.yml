@@ -54,7 +54,7 @@ logging:
 endpoints:
    envio-correo: ${msit_CORREO_REGISTRO}
    renapo: ${msit_RENAPO}
-   sepomex: msit_SEPOMEX
+   sepomex: ${msit_SEPOMEX}
 jwt:
   secretkey: ${msit_SECRET_KEY_LOGIN}
   secretkey-flujo: ${msit_SECRET_KEY}
