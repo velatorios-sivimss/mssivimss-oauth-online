@@ -48,8 +48,9 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.web: info
+    org.springframework.web: TRACE
     org.hibernate: error
+    com.imss.sivimss.service.impl: TRACE
 
 endpoints:
    envio-correo: ${msit_CORREO_REGISTRO}
