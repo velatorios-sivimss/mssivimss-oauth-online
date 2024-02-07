@@ -71,4 +71,8 @@ public class ProviderServiceRestTemplate {
 			throw exception;
 		}
 	}
+	
+	public Response<Object> consumirServicioExternoGet(String url) {
+		return restTemplateUtil.sendGetRequest(url);
+	}
 }
