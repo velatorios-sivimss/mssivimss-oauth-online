@@ -46,7 +46,7 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 		if(datos==null||datos.isEmpty()) {
 			if(curp!=null) {
 			Map<String, Object> renapo;
-			 renapo = providerRestTemplate.consumirServicioGet(urlRenapo + curp);
+			 renapo = providerRestTemplate.consumirServicioGet(urlRenapo.concat("/") +curp);
 			if(renapo.get("statusOper").toString().equals("NO EXITOSO")) {
 				return	new Response<>(true, HttpStatus.OK.value(),"NO EXISTE CURP",
 						null);
