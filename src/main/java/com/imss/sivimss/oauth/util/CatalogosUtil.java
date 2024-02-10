@@ -121,7 +121,7 @@ public class CatalogosUtil {
 		return query.toString();
 	}
 	
-	public String validarRfcCurp(String curp, String rfc) {
+	public String validarRfcCurp(String curp, String rfc, String nss) {
 		
 		StringBuilder query = new StringBuilder("SELECT SP.ID_PERSONA idPersona, "
 				+ "SP.NOM_PERSONA nomPersona,"
@@ -165,8 +165,10 @@ public class CatalogosUtil {
 		query.append( "LEFT JOIN SVT_USUARIOS USR ON USR.ID_PERSONA = SP.ID_PERSONA " );
 		if(curp!=null) {
 			query.append( " WHERE SP.CVE_CURP = '"+curp+"'" );
-		}else{
+		}else if(rfc!=null){
 			query.append( " WHERE SP.CVE_RFC =  '"+rfc+"'" );
+		}else if(nss!=null) {
+			query.append( " WHERE SP.CVE_NSS =  '"+nss+"'" );
 		}
 		query.append(" LIMIT 1");
 		return query.toString();

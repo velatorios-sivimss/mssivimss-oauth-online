@@ -7,7 +7,7 @@ import com.imss.sivimss.oauth.util.Response;
 
 public interface CatalogosService {
 
-	public Response<Object> consultaRfcCurp(String curp, String rfc) throws IOException;
+	public Response<Object> consultaRfcCurp(String curp, String rfc, String nss) throws IOException;
 
 	public Object consultaPais() throws IOException;
 

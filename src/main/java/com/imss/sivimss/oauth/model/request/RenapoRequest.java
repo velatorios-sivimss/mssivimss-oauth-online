@@ -32,5 +32,5 @@ public class RenapoRequest {
 		this.fechNac = renapo.get("fechNac").toString().replace("/", "-");
 	}
 	
-	
+		
 }

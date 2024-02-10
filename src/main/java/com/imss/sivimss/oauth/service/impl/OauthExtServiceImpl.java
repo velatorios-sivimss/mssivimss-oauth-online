@@ -22,7 +22,6 @@ import com.imss.sivimss.oauth.beans.Contratante;
 import com.imss.sivimss.oauth.exception.BadRequestException;
 import com.imss.sivimss.oauth.model.Login;
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
-import com.imss.sivimss.oauth.model.request.PlanSFPARequest;
 import com.imss.sivimss.oauth.service.ContraseniaExtService;
 import com.imss.sivimss.oauth.service.ContratanteService;
 import com.imss.sivimss.oauth.service.CuentaExtService;
