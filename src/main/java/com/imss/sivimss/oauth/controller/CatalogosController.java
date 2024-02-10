@@ -33,12 +33,15 @@ public class CatalogosController {
 		Response<Object>response;
 		String curp=null;
 		String rfc=null;
+		String nss=null;
 		if(datos.get("curp")!=null) {
 			curp = datos.get("curp").toString();
-		}else {
+		}else if(datos.get("rfc")!=null){
 			rfc = datos.get("rfc").toString();
+		}else if(datos.get("nss")!=null) {
+			nss = datos.get("nss").toString();
 		}
-		 response = catalogosService.consultaRfcCurp(curp, rfc);
+		 response = catalogosService.consultaRfcCurp(curp, rfc, nss);
 	/*	 if(response.getDatos().toString().equals("[]")) {
 			 response = new Response<>(false, HttpStatus.OK.value(),"45",
 						response.getDatos());
