@@ -94,7 +94,9 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 
 	@Override
 	public Object consultaCP(String cp) throws IOException {
-		 Response<Object> response =providerRestTemplate.consumirServicioExternoGet(urlSepomex.concat("/")+cp);
+		String peticionSepomex = urlSepomex.concat("/")+cp;
+		log.info(peticionSepomex);
+		 Response<Object> response =providerRestTemplate.consumirServicioExternoGet(peticionSepomex);
 		 if(response.getCodigo()==200) {
 			 return new Response<>(false, HttpStatus.OK.value(),EXITO,
 						response.getDatos());
