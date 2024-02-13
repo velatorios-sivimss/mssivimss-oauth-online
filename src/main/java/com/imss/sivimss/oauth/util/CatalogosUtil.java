@@ -1,5 +1,10 @@
 package com.imss.sivimss.oauth.util;
 
+import com.imss.sivimss.oauth.service.impl.CatalogosServiceImpl;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CatalogosUtil {
 	
 	public String delegacion() {
@@ -171,6 +176,7 @@ public class CatalogosUtil {
 			query.append( " WHERE SP.CVE_NSS =  '"+nss+"'" );
 		}
 		query.append(" LIMIT 1");
+		log.info("query "+query.toString());
 		return query.toString();
 	}
 }

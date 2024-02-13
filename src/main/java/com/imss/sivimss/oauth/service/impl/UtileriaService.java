@@ -20,9 +20,12 @@ import com.imss.sivimss.oauth.config.mymapper.Consultas;
 import com.imss.sivimss.oauth.config.mymapper.IdDto;
 import com.imss.sivimss.oauth.util.Database;
 import com.imss.sivimss.oauth.util.ProviderServiceRestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.imss.sivimss.oauth.config.MyBatisConnect;
 import com.imss.sivimss.oauth.security.JwtProvider;
-
+@Slf4j
 @Service
 public class UtileriaService {
 	
