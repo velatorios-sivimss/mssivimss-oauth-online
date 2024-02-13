@@ -94,11 +94,26 @@ public class Contratante {
 		
 		return query.toString();
 	}
+	
+	public String validarPorNss(String nss) {
+		
+		StringBuilder query = new StringBuilder(BdConstantes.SELECT_CONTRATANTE);
+		query.append( "INNER JOIN SVC_PERSONA PER ON SC.ID_PERSONA = PER.ID_PERSONA " );
+		query.append( "INNER JOIN SVT_USUARIOS USR ON PER.ID_PERSONA = USR.ID_PERSONA " );
+		query.append( "INNER JOIN SVC_ROL ROL ON USR.ID_ROL = ROL.ID_ROL " );
+		query.append( BdConstantes.WHERE );
+		query.append( "PER.CVE_NSS = ");
+		query.append( "'" + nss + "' " );
+		query.append( BdConstantes.LIMIT );
+		log.info("valida: "+query.toString());
+		return query.toString();
+	}
 
 
 	public String insertarPersona(PersonaRequest contratanteR) throws ParseException {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVC_PERSONA");
 		q.agregarParametroValues("CVE_CURP", "'"+contratanteR.getCurp()+"'");
+		q.agregarParametroValues("CVE_NSS", setValor(contratanteR.getNss()));
 		q.agregarParametroValues("NOM_PERSONA", "'" +contratanteR.getNombre()+ "'");
 		q.agregarParametroValues("NOM_PRIMER_APELLIDO", "'" +contratanteR.getPaterno()+ "'");
 		q.agregarParametroValues("NOM_SEGUNDO_APELLIDO", "'" +contratanteR.getMaterno()+ "'");
