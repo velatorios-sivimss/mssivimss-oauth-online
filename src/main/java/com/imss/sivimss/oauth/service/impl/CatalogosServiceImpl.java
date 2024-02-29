@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -28,19 +27,16 @@ public class CatalogosServiceImpl extends UtileriaService implements CatalogosSe
 	@Autowired
 	private LogUtil logUtil;
 	
-	@Autowired
-	private ModelMapper modelMapper;
-	
-	  @Value("${endpoints.renapo}")
-	    private String urlRenapo;
+	@Value("${endpoints.renapo}")
+	private String urlRenapo;
+  
+	@Value("${endpoints.sepomex}")
+	private String urlSepomex;
+  
+	@Value("${endpoints.nss}")
+	private String urlNss;
 	  
-	  @Value("${endpoints.sepomex}")
-	    private String urlSepomex;
-	  
-	  @Value("${endpoints.nss}")
-	    private String urlNss;
-	  
-	  private static final String EXITO = "EXITO";
+	private static final String EXITO = "EXITO";
 
 	@Override
 	public Response<Object> consultaRfcCurp(PersonaRequest filtros) throws IOException {

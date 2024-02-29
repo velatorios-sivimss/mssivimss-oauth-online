@@ -188,7 +188,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 							contratanteR.getContratante().setIdPersona(rs.getInt(1));
 					  }
 				statement.executeUpdate(
-						contratante.insertarDomicilio(contratanteR.getDomicilio(), contratanteR.getContratante().getIdUsuario()),
+						contratante.insertarDomicilio(contratanteR.getDomicilio()),
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
