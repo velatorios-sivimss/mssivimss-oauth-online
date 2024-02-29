@@ -129,13 +129,12 @@ public class Contratante {
 		q.agregarParametroValues("REF_TELEFONO", setValor(contratanteR.getTel()));
 		q.agregarParametroValues("REF_TELEFONO_FIJO", setValor(contratanteR.getTelFijo()));
 		q.agregarParametroValues(BdConstantes.REF_CORREO, setValor(contratanteR.getCorreo()));
-		//q.agregarParametroValues(ID_USUARIO_ALTA, idUsuario.toString());
-			q.agregarParametroValues(BdConstantes.FEC_ALTA,BdConstantes.CURRENT_DATE);
+		q.agregarParametroValues(BdConstantes.FEC_ALTA,BdConstantes.CURRENT_DATE);
 			return q.obtenerQueryInsertar();	
 	}
 
 
-	public String insertarDomicilio(DomicilioDto domicilio, Integer idUsuario) {
+	public String insertarDomicilio(DomicilioDto domicilio) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVT_DOMICILIO");
 			q.agregarParametroValues("REF_CALLE", setValor(domicilio.getCalle()));
 			q.agregarParametroValues("NUM_EXTERIOR", setValor(domicilio.getNumExt()));
@@ -144,7 +143,6 @@ public class Contratante {
 			q.agregarParametroValues("REF_COLONIA", setValor(domicilio.getColonia()));
 			q.agregarParametroValues("REF_MUNICIPIO", setValor(domicilio.getMunicipio()));
 			q.agregarParametroValues("REF_ESTADO", setValor(domicilio.getEstado()));
-			//q.agregarParametroValues(BdConstantes.ID_USUARIO_ALTA, idUsuario.toString());
 			q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
 			return q.obtenerQueryInsertar();
 	}
@@ -156,7 +154,6 @@ public class Contratante {
 		q.agregarParametroValues(BdConstantes.CVE_MATRICULA, setValor(contratante.getMatricula()));
 		q.agregarParametroValues("ID_DOMICILIO", contratante.getIdDomicilio().toString());
 		q.agregarParametroValues("IND_ACTIVO", "1");
-		//q.agregarParametroValues(BdConstantes.ID_USUARIO_ALTA, contratante.getIdUsuario().toString());
 		q.agregarParametroValues(BdConstantes.FEC_ALTA, BdConstantes.CURRENT_DATE);
 		log.info("contratante: "+q.obtenerQueryInsertar());
 		return q.obtenerQueryInsertar();
@@ -174,18 +171,5 @@ public class Contratante {
 	public String cuentaUsuarios() {
 		return BdConstantes.MAX_CONTRATANTE;
 	}
-
-
-	/*public String consultaPlanSFPA(Integer idPlanSfpa) {
-		log.info(" INICIO - consultaPlanSFPA");
-		StringBuilder queryUtil = new StringBuilder();
-		queryUtil.append(" SELECT  SPSFPA.ID_TITULAR as idTitular, SP.ID_PERSONA AS idPersona, IFNULL(SP.NOM_PERSONA, '') AS nomPersona, ")
-		.append(" IFNULL(SP.NOM_PRIMER_APELLIDO, '') AS nomApellidoPaterno, IFNULL(SP.NOM_SEGUNDO_APELLIDO, '')AS nomApellidoMaterno, ")
-		.append(" IFNULL(SP.REF_CORREO , '')AS correo FROM SVT_PLAN_SFPA SPSFPA INNER JOIN SVC_CONTRATANTE SC ON ")
-		.append(" SC.ID_CONTRATANTE = SPSFPA.ID_TITULAR INNER JOIN SVC_PERSONA SP ON SP.ID_PERSONA = SC.ID_PERSONA ")
-		.append(" WHERE SPSFPA.ID_PLAN_SFPA = ").append(idPlanSfpa);
-		log.info(" TERMINO - consultaPlanSFPA"+ queryUtil.toString() );
-		return queryUtil.toString();
-	} */
 
 }
