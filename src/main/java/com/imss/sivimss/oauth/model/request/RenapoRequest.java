@@ -22,6 +22,8 @@ public class RenapoRequest {
 	private String nombre;
 	private String sexo;
 	private String fechNac;
+	private String desEntidadNac;
+	private String nacionalidad;
 	
 	
 	public RenapoRequest(Map<String, Object> renapo) {
@@ -30,6 +32,8 @@ public class RenapoRequest {
 		this.nombre = renapo.get("nombre").toString();
 		this.sexo = renapo.get("sexo").toString();
 		this.fechNac = renapo.get("fechNac").toString().replace("/", "-");
+		this.desEntidadNac = renapo.get("desEntidadNac").toString();
+		this.nacionalidad = renapo.get("nacionalidad").toString();
 	}
 	
 		
