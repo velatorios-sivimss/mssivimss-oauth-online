@@ -129,7 +129,8 @@ public class CatalogosUtil {
 				+ " SP.NOM_SEGUNDO_APELLIDO,"
 				+ " SP.CVE_RFC,"
 				+ " SV.ID_CONTRATANTE,"
-				+ " SP.ID_PAIS,"
+				+ " IFNULL(SP.ID_PAIS,0) AS idPais,"
+				+ " IFNULL(SP.ID_ESTADO,0) AS idEstado,"
 				+ " SP.CVE_CURP,"
 				+ " SV.IND_ACTIVO"
 				+ " FROM ");
