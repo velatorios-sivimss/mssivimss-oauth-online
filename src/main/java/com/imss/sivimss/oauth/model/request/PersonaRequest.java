@@ -34,5 +34,6 @@ public class PersonaRequest {
 	private String correo;
 	private ContratanteDto contratante;
 	private DomicilioDto domicilio;
+	private Integer idUsuario;
 
 }

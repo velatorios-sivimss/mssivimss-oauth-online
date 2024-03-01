@@ -1,5 +1,10 @@
 package com.imss.sivimss.oauth.util;
 
+import com.imss.sivimss.oauth.service.impl.CatalogosServiceImpl;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CatalogosUtil {
 	
 	public String delegacion() {
@@ -121,27 +126,57 @@ public class CatalogosUtil {
 		return query.toString();
 	}
 	
-	public String validarRfcCurp(String curp, String rfc) {
+	public String validarRfcCurp(String curp, String rfc, String nss) {
 		
-		StringBuilder query = new StringBuilder("SELECT SP.ID_PERSONA, "
-				+ "SP.NOM_PERSONA,"
-				+ " SP.NOM_PRIMER_APELLIDO,"
-				+ " SP.NOM_SEGUNDO_APELLIDO,"
-				+ " SP.CVE_RFC,"
-				+ " SV.ID_CONTRATANTE,"
-				+ " IFNULL(SP.ID_PAIS,0) AS nacionalidad,"
-				+ " IFNULL(SP.ID_ESTADO,0) AS desEntidadNac,"
-				+ " SP.CVE_CURP,"
-				+ " SV.IND_ACTIVO"
+		StringBuilder query = new StringBuilder("SELECT SP.ID_PERSONA idPersona, "
+				+ "SP.NOM_PERSONA nomPersona,"
+				+ " SP.NOM_PRIMER_APELLIDO materno,"
+				+ " SP.NOM_SEGUNDO_APELLIDO paterno,"
+				+ " SP.CVE_RFC rfc,"
+				+ " SV.ID_CONTRATANTE idContratante,"
+				+ " SP.CVE_CURP curp,"
+				+ " SV.IND_ACTIVO estatus,"
+				+ "SP.CVE_NSS nss,"
+				+ "DATE_FORMAT(SP.FEC_NAC, '%d/%m/%Y') fecNacimiento, "
+				+ "SP.NUM_SEXO idSexo, "
+				+ "CASE "
+				+ "WHEN SP.NUM_SEXO=1 THEN 'MUJER' "
+				+ "WHEN SP.NUM_SEXO=2 THEN 'HOMBRE' "
+				+ "ELSE 'OTRO' "
+				+ "END sexo, "
+				+ "SP.REF_OTRO_SEXO otroSexo, " 
+				+ "IF(SP.ID_PAIS=119, 'MEXICANA', 'EXTRANJERA') nacionalidad, "
+				+ "PA.DES_PAIS pais, "
+				+ "SP.ID_PAIS idPais, "
+				+ "EDO.DES_ESTADO lugarNac, "
+				+ "SP.ID_ESTADO idLugarNac, "
+				+ "SP.REF_TELEFONO tel, "
+				+ "SP.REF_CORREO correo, "
+				+ "DOM.REF_CALLE calle, "
+				+ "DOM.NUM_EXTERIOR numExt, "
+				+ "DOM.NUM_INTERIOR numInt, "
+				+ "DOM.REF_CP cp, "
+				+ "DOM.REF_COLONIA colonia, "
+				+ "DOM.REF_MUNICIPIO municipio, "
+				+ "DOM.REF_ESTADO estado, "
+				+ "USR.ID_USUARIO idUsuario, "
+				+ "USR.CVE_USUARIO usr"		
 				+ " FROM ");
 		query.append( "SVC_CONTRATANTE SV " );
 		query.append( "INNER JOIN SVC_PERSONA SP ON SV.ID_PERSONA = SP.ID_PERSONA " );
+		query.append( "INNER JOIN SVC_PAIS PA ON SP.ID_PAIS = PA.ID_PAIS " );
+		query.append( "LEFT JOIN SVC_ESTADO EDO ON SP.ID_ESTADO = EDO.ID_ESTADO " );
+		query.append( "INNER JOIN SVT_DOMICILIO DOM ON SV.ID_DOMICILIO = DOM.ID_DOMICILIO " );
+		query.append( "LEFT JOIN SVT_USUARIOS USR ON USR.ID_PERSONA = SP.ID_PERSONA " );
 		if(curp!=null) {
-			query.append( " AND SP.CVE_CURP = '"+curp+"'" );
-		}else{
-			query.append( " AND SP.CVE_RFC =  '"+rfc+"'" );
+			query.append( " WHERE SP.CVE_CURP = '"+curp+"'" );
+		}else if(rfc!=null){
+			query.append( " WHERE SP.CVE_RFC =  '"+rfc+"'" );
+		}else if(nss!=null) {
+			query.append( " WHERE SP.CVE_NSS =  '"+nss+"'" );
 		}
-		
+		query.append(" LIMIT 1");
+		log.info("query "+query.toString());
 		return query.toString();
 	}
 }

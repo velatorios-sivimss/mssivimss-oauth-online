@@ -27,21 +27,7 @@ public class GeneraCredencialesUtil{
 	
 	@Value("${endpoints.envio-correo}")
 	private String urlEnvioCorreo;
-
-	public String insertarUser(Integer numberUser, String nombreCompleto, String paterno, String contrasenia, Integer idPersona, Statement statement) throws SQLException{
-		String hash = passwordEncoder.encode(contrasenia);
-		String[] obtieneNombre = nombreCompleto.split(" ");
-        String nombre = obtieneNombre[0];
-        char[] apellido= paterno.toCharArray();
-        char apM = apellido[0];
-        String inicialApellido = String.valueOf(apM);
-        String formatearCeros = String.format("%03d", numberUser);
-		String user = nombre+inicialApellido+formatearCeros;
-		 statement.executeUpdate(insertarUsuario(idPersona, hash, user),
-					Statement.RETURN_GENERATED_KEYS);
-		return user;
-	}
-
+	
 	public String generarContrasenia(String nombreCompleto, String paterno) {
 		SecureRandom random = new SecureRandom();
         String caracteres = "#$^+=!*()@%&";
@@ -60,7 +46,7 @@ public class GeneraCredencialesUtil{
         }
       
         char randomChar = caracteres.charAt(randomInt);
-        char[] apellido= paterno.toCharArray();
+        char[] apellido= paterno.toLowerCase().toCharArray();
         
         char pLetra = apellido[0];//paterno 0
         String pLetraS = String.valueOf(pLetra); 
@@ -73,8 +59,24 @@ public class GeneraCredencialesUtil{
 		
 		return nombre+randomChar+"."+pLetraS.toUpperCase()+sLetra+numMes;
 	} 
+
+	public String insertarUser(Integer numberUser, String nombreCompleto, String paterno, String contrasenia, Integer idPersona, Statement statement) throws SQLException{
+		String hash = passwordEncoder.encode(contrasenia);
+		String[] obtieneNombre = nombreCompleto.split(" ");
+        String nombre = obtieneNombre[0];
+        char[] apellido= paterno.toCharArray();
+        char apM = apellido[0];
+        String inicialApellido = String.valueOf(apM);
+        String formatearCeros = String.format("%03d", numberUser);
+		String user = nombre+inicialApellido+formatearCeros;
+		 statement.executeUpdate(queryUsuario(idPersona, hash, user),
+					Statement.RETURN_GENERATED_KEYS);
+		return user;
+	}
+
 	
-	public String insertarUsuario(Integer idPersona, String contrasenia, String user) {
+	
+	private String queryUsuario(Integer idPersona, String contrasenia, String user) {
 		final QueryHelper q = new QueryHelper("INSERT INTO SVT_USUARIOS");
 		q.agregarParametroValues("ID_PERSONA", idPersona.toString());
 		q.agregarParametroValues("ID_OFICINA", "3");
@@ -92,15 +94,10 @@ public class GeneraCredencialesUtil{
 		log.info("envioCorreo "+urlEnvioCorreo);
 		String nombreUser = nombre.toUpperCase()+" "+paterno.toUpperCase()+" "+materno.toUpperCase(); 
 		String credenciales = "<b>Nombre completo del Usuario:</b> "+nombreUser+"<br> <b>Clave de usuario: </b>"+user.toUpperCase() +"<br> <b>Contraseña: </b>"+contrasenia;
-		CorreoRequest correoR = new CorreoRequest(user.toUpperCase(), credenciales, correo, AppConstantes.USR_CONTRASENIA);
+		
+			CorreoRequest correoR = new CorreoRequest(user.toUpperCase(), credenciales, correo, AppConstantes.USR_CONTRASENIA);
 			//Hacemos el consumo para enviar el codigo por correo
-		
-			Response <Object>response = providerRestTemplate.consumirServicio(correoR, urlEnvioCorreo);
-		
-		if(response.getCodigo()!=200) {
-			return new Response<>(true, 200, "Error en el envio de correos", null);
-		}
-		  return response;
+			return providerRestTemplate.consumirServicio(correoR, urlEnvioCorreo);
 	}
 	
 	

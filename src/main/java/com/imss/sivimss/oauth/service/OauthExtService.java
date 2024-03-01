@@ -13,6 +13,4 @@ public interface OauthExtService {
 
 	Response<Object> registrarContratante(PersonaRequest contratanteR) throws IOException;
 	
-	Response<Object> registrarUsuario(PlanSFPARequest planSFPARequest) throws IOException;
-
 }

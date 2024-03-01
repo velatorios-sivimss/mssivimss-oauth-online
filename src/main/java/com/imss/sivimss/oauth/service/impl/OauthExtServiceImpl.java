@@ -22,7 +22,6 @@ import com.imss.sivimss.oauth.beans.Contratante;
 import com.imss.sivimss.oauth.exception.BadRequestException;
 import com.imss.sivimss.oauth.model.Login;
 import com.imss.sivimss.oauth.model.request.PersonaRequest;
-import com.imss.sivimss.oauth.model.request.PlanSFPARequest;
 import com.imss.sivimss.oauth.service.ContraseniaExtService;
 import com.imss.sivimss.oauth.service.ContratanteService;
 import com.imss.sivimss.oauth.service.CuentaExtService;
@@ -132,12 +131,13 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		Map<String, Object> mapa = new HashMap<>();
 		mapa.put("nombre", usuario.getNombre() + " " + usuario.getPaterno() + " " + usuario.getMaterno());
 		mapa.put("curp", usuario.getCurp());
-		mapa.put("idPais", usuario.getIdPais() );
-		mapa.put("idEstado", usuario.getIdEstado());
+		mapa.put("idPais",  usuario.getIdPais()!=null ? usuario.getIdPais() : "119"  );
+		mapa.put("idEstado", usuario.getIdEstado());	
 		mapa.put("cveMatricula", usuario.getClaveMatricula());
 		mapa.put("cveUsuario", usuario.getClaveUsuario());
 		mapa.put("idUsuario", usuario.getIdUsuario());
-		mapa.put("idRol", "150");
+		mapa.put("idRol", usuario.getIdRol());
+		mapa.put("desRol", usuario.getRol());
 		mapa.put("idContratante", usuario.getIdContratante());
 		mapa.put("idPersona", usuario.getIdPersona());
 		
@@ -163,15 +163,24 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 	
 	@Override
 	public Response<Object> registrarContratante(PersonaRequest contratanteR) throws IOException {
-		Response <Object>resp = new Response<>();
+		Response <Object> resp;
 		Contratante contratante = new Contratante();
-		Integer idContratante = 0;
+		Integer idContratante = contratanteR.getContratante().getIdContratante();
+	     List<Map<String, Object>> datos;
+			datos = consultaGenericaPorQuery(contratante.validarPorNss(contratanteR.getNss()));
+		
+		if(contratanteR.getIdUsuario()!=null || !datos.isEmpty()) {
+			return new Response<>(true, HttpStatus.OK.value(), "197",
+					null );
+		}
+		
 		Connection connection = database.getConnection();
 		
 		try {
 			
 			statement = connection.createStatement();
 			connection.setAutoCommit(false);
+			if(contratanteR.getContratante().getIdContratante()==null) {
 			statement.executeUpdate(contratante.insertarPersona(contratanteR),
 						Statement.RETURN_GENERATED_KEYS);
 			 rs = statement.getGeneratedKeys();
@@ -179,7 +188,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 							contratanteR.getContratante().setIdPersona(rs.getInt(1));
 					  }
 				statement.executeUpdate(
-						contratante.insertarDomicilio(contratanteR.getDomicilio(), contratanteR.getContratante().getIdUsuario()),
+						contratante.insertarDomicilio(contratanteR.getDomicilio()),
 						Statement.RETURN_GENERATED_KEYS);
 				rs = statement.getGeneratedKeys();
 				if (rs.next()) {
@@ -192,10 +201,20 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 					idContratante= rs.getInt(1);
 					log.info(idContratante.toString());  
 				}
-				
+			}
 				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
 				String user = generaCredenciales.insertarUser(idContratante,contratanteR.getNombre(), contratanteR.getPaterno(), contrasenia, contratanteR.getContratante().getIdPersona(), statement);
-				resp = generaCredenciales.enviarCorreo(user, contratanteR.getCorreo(), contratanteR.getNombre(), contratanteR.getPaterno(), contratanteR.getMaterno(), contrasenia);
+				
+				if(contratanteR.getCorreo()!=null) {
+					  resp = generaCredenciales.enviarCorreo(user, contratanteR.getCorreo(), contratanteR.getNombre(), contratanteR.getPaterno(), contratanteR.getMaterno(), contrasenia);
+					 log.info("CORREO ENVIADO CORRECTAMENTE "+idContratante );
+					 resp = new Response<>(false, HttpStatus.OK.value(), "OK",
+								idContratante );
+				}else {
+					  resp = new Response<>(false, HttpStatus.OK.value(), "ERROR AL ENVIAR CORREO ELECTRONICO",
+								idContratante );
+					  log.info("USUARIO SIN CORREO ELECTRONICO "+idContratante );
+				}
 					connection.commit();
 		}catch (Exception e) {
 			throw new IOException("Fallo al ejecutar la query" + e.getMessage());
@@ -217,68 +236,10 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
     
 			}
 	}
-		if (resp.getCodigo()==null) {
-			resp = new Response<>(true, HttpStatus.OK.value(), "error al enviar el correo",
-					null );
-		} else {
-			resp = new Response<>(false, HttpStatus.OK.value(), "OK",
-					idContratante );
-		}
-		return resp;
+		
+			return resp;
 	}
 
-	@Override
-	public Response<Object> registrarUsuario(PlanSFPARequest planSFPARequest) throws IOException {
-		Response <Object>resp = new Response<>();
-		PersonaRequest contratanteR = new PersonaRequest();
-		Connection connection = database.getConnection();
-		
-		try {
-			
-			statement = connection.createStatement();
-			connection.setAutoCommit(false);
-			rs=statement.executeQuery(new Contratante().consultaPlanSFPA(planSFPARequest.getIdPlanSfpa()));
-			if (rs.next()) {
-				contratanteR.getContratante().setIdContratante(rs.getInt(1));
-				contratanteR.getContratante().setIdPersona(rs.getInt(2));
-				contratanteR.setNombre(rs.getString(3));
-				contratanteR.setPaterno(rs.getString(4));
-				contratanteR.setMaterno(rs.getString(5));
-				contratanteR.setCorreo(rs.getString(6));
-				String contrasenia= generaCredenciales.generarContrasenia(contratanteR.getNombre() , contratanteR.getPaterno());
-				String user = generaCredenciales.insertarUser(contratanteR.getContratante().getIdContratante(),contratanteR.getNombre(), contratanteR.getPaterno(), contrasenia, contratanteR.getContratante().getIdPersona(), statement);
-				resp = generaCredenciales.enviarCorreo(user, contratanteR.getCorreo(), contratanteR.getNombre(), contratanteR.getPaterno(), contratanteR.getMaterno(), contrasenia);
-			}
-			connection.commit();
-		}catch (Exception e) {
-			throw new IOException("Fallo al ejecutar la query" + e.getMessage());
-		
-		}finally {
-			
-			try {
-				
-				if(statement!=null) {
-					statement.close();
-				}                               
-				if(connection!=null) {
-					connection.close();
-				}
-				
-			} catch (SQLException ex) {
-				
-				log.info(ex.getMessage());
-    
-			}
-	}
-		if (resp.getCodigo()==null) {
-			resp = new Response<>(true, HttpStatus.OK.value(), "error al enviar el correo",
-					null );
-		} else {
-			resp = new Response<>(false, HttpStatus.OK.value(), "OK",
-					contratanteR.getContratante().getIdContratante() );
-		}
-		return resp;
-	}
 }
 	
 

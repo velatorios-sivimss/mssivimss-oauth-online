@@ -53,13 +53,5 @@ public class OauthExtController {
       
 	}
 	
-	@PostMapping("registrar/usuario")
-	public Response<Object> registrarUsuario(@RequestBody PlanSFPARequest planSFPARequest) throws Exception {
-		
-		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),"",AppConstantes.ALTA+" "+ planSFPARequest);
-		
-		return oauthService.registrarUsuario(planSFPARequest);
-      
-	}
 
 }

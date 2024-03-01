@@ -9,9 +9,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.imss</groupId>
-	<artifactId>mssivimss-oauth</artifactId>
+	<artifactId>mssivimss-oauth-online</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mssivimss-oauth</name>
+	<name>mssivimss-oauth-online</name>
 	<description>Ms de Autenticacion</description>
 	<properties>
 		<java.version>1.8</java.version>
