@@ -172,5 +172,28 @@ public class UtileriaService {
 		
 		return exito;
 	}
-		
+	private String insertarBitacora (String id) {
+		String query = "INSERT\r\n"
+				+ "INTO\r\n"
+				+ "SVH_BITACORA_DOCUMENTOS (ID_TIPO_TRANSACCION, ID_USUARIO)\r\n"
+				+ "VALUES\r\n"
+				+ "(4,"+id+")\r\n";
+		return query;
+	}
+	
+	public void registrarBitacora(String id) throws IOException{
+		try {
+			String query = 	insertarBitacora(id);
+			IdDto idDto = new IdDto();
+			context = con.conectar();
+			consultas = con.crearBeanDeConsultas();
+			consultas.insert(query, idDto);
+			
+
+		} catch (Exception e) {
+			log.error(FALLO_QUERY + ", {}", e.getMessage());
+			throw new IOException(FALLO_QUERY + e.getMessage());
+		}
+
+	}
 }
