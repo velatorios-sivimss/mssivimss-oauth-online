@@ -157,6 +157,7 @@ public class OauthExtServiceImpl extends UtileriaService implements OauthExtServ
 		resp =  new Response<>(false, HttpStatus.OK.value(), mensaje,
 				token );
 		
+		registrarBitacora(usuario.getIdUsuario());	
 		return resp;
 		
 	}
